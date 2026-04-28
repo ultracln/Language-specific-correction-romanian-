@@ -1,0 +1,17 @@
+The tokenizer you are loading from 'results/seq2seq/best' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+evaluating on 2000 examples
+100%|██████████| 2000/2000 [14:47<00:00,  2.25it/s]
+
+=== per error type ===
+type                n     acc   changed   spurious  no_change_when_should
+agreement         312  0.9423       228          3                      8
+diacritics        344  0.7209       307          4                     29
+no_change         318  0.9119        28         28                      0
+noun_form         333  0.8829       259          4                     18
+orthographic      234  0.2009        39          3                    152
+punctuation       171  0.8363       100          3                     21
+spelling          288  0.4826       215          0                     67
+
+overall exact-match accuracy: 0.7275  (n=2000)
+
+wrote eval to results/eval_syn

@@ -1,0 +1,23 @@
+[
+  {
+    "loss": 0.05018566666028888,
+    "exact_match": 0.685,
+    "eval_examples": 800,
+    "epoch": 1,
+    "train_loss": 1.3720836496964568
+  },
+  {
+    "loss": 0.04001131704613819,
+    "exact_match": 0.7425,
+    "eval_examples": 800,
+    "epoch": 2,
+    "train_loss": 0.07506908577579606
+  },
+  {
+    "loss": 0.03631088251871514,
+    "exact_match": 0.7675,
+    "eval_examples": 800,
+    "epoch": 3,
+    "train_loss": 0.05710229973113107
+  }
+]

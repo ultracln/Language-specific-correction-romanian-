@@ -1,0 +1,68 @@
+loading data/synthetic.csv
+loaded 130000 rows
+error_type distribution:
+  diacritics     24543
+  noun_form      22257
+  agreement      19749
+  no_change      19404
+  spelling       18387
+  orthographic   13825
+  punctuation    11835
+after length filter: 130000 rows
+building aligned examples...
+detector examples: 130000
+corrector examples: 94659
+skipped (empty): 0
+splitting...
+
+detector splits:
+  train: 117000 examples
+    agreement        17774  (15.19%)
+    diacritics       22089  (18.88%)
+    no_change        17464  (14.93%)
+    noun_form        20031  (17.12%)
+    orthographic     12442  (10.63%)
+    punctuation      10652  ( 9.10%)
+    spelling         16548  (14.14%)
+  val: 6500 examples
+    agreement          987  (15.18%)
+    diacritics        1227  (18.88%)
+    no_change          970  (14.92%)
+    noun_form         1113  (17.12%)
+    orthographic       691  (10.63%)
+    punctuation        592  ( 9.11%)
+    spelling           920  (14.15%)
+  test: 6500 examples
+    agreement          988  (15.20%)
+    diacritics        1227  (18.88%)
+    no_change          970  (14.92%)
+    noun_form         1113  (17.12%)
+    orthographic       692  (10.65%)
+    punctuation        591  ( 9.09%)
+    spelling           919  (14.14%)
+
+corrector splits (errored only):
+  train: 85225 examples
+    agreement        13795  (16.19%)
+    diacritics       21405  (25.12%)
+    noun_form        16442  (19.29%)
+    orthographic      9972  (11.70%)
+    punctuation       7438  ( 8.73%)
+    spelling         16173  (18.98%)
+  val: 4710 examples
+    agreement          749  (15.90%)
+    diacritics        1195  (25.37%)
+    noun_form          910  (19.32%)
+    orthographic       553  (11.74%)
+    punctuation        401  ( 8.51%)
+    spelling           902  (19.15%)
+  test: 4724 examples
+    agreement          755  (15.98%)
+    diacritics        1185  (25.08%)
+    noun_form          899  (19.03%)
+    orthographic       575  (12.17%)
+    punctuation        408  ( 8.64%)
+    spelling           902  (19.09%)
+wrote test.csv with 6500 rows for end-to-end eval
+
+wrote artifacts to data/prepared

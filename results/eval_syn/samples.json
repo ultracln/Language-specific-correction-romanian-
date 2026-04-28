@@ -1,0 +1,572 @@
+[
+  {
+    "input": "Hicks, ai putea să încerci să țipi, pentru că .... ești supărat din cauza lui Dani cum sunt şi eu sunt supărat când vine vorba de Anna.",
+    "target": "Hicks, ai putea să încerci să țipi, pentru că .... ești supărat din cauza lui Dani cum sunt şi eu sunt supărat când vine vorba de Anna.",
+    "output": "Hicks , ai putea să încerci să țipi , pentru că . . . . ești supărat din cauza lui Dani cum sunt și eu sunt supărat când vine vorba de Anna .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "N-a suportat s-o privească în timp ce o pângărea.",
+    "target": "N-a suportat s-o privească în timp ce o pângărea.",
+    "output": "N - a suportat s - o privească în timp ce o pângărea .",
+    "error_type": "punctuation",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Clima Unitățile climatice TTeritoriul județului Dâmbovița aparține în proporție de cca.",
+    "target": "Clima Unitățile climatice Teritoriul județului Dâmbovița aparține în proporție de cca.",
+    "output": "Clima Unitățile climatice Țeritoriul județului Dâmbovița aparține în proporție de cca .",
+    "error_type": "spelling",
+    "is_correct": false,
+    "flagged": [
+      "TTeritoriul"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Papa Martin I care a ocupat scaunul pontifical în secolul al VII-lea fără aprobarea Constantinopolului, s-a opus politicii împăraților bizantini, Heraclius și Constant, care încercau să găsească o formulă de compromis intre monofiziti și ortodocși.",
+    "target": "Papa Martin I care a ocupat scaunul pontifical în secolul al VII-lea fără aprobarea Constantinopolului, s-a opus politicii împăraților bizantini, Heraclius și Constant, care încercau să găsească o formulă de compromis între monofiziți și ortodocși.",
+    "output": "Papa Martin I care a ocupat scaunul pontifical în secolul al VII - lea fără aprobarea Constantinopolului , s - a opus politicii împăraților bizantini , Heraclius și Constant , care încercau să găsească o formulă de compromis între monofiziți și ortodocși .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "intre",
+      "monofiziti"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "(24) Serviciile exploatate în baza unui contract cu o autoritate publică pot necesita reguli speciale pentru a îşi menţine gradu de atractivitate faţă de utilizatori.",
+    "target": "(24) Serviciile exploatate în baza unui contract cu o autoritate publică pot necesita reguli speciale pentru a îşi menţine gradul de atractivitate faţă de utilizatori.",
+    "output": "( 24 ) Serviciile exploatate în baza unui contract cu o autoritate publică pot necesita reguli speciale pentru a își menține gradul de atractivitate față de utilizatori .",
+    "error_type": "noun_form",
+    "is_correct": true,
+    "flagged": [
+      "gradu"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "2996 Nek - Te iubesc ca un nebun 2012 (Originala) - mp3 manele 730",
+    "target": "2996 Nek - Te iubesc ca un nebun 2012 (Originala) - mp3 manele 730",
+    "output": "2996 Nek - Te iubesc ca un nebun 2012 ( Originala ) - mp3 manele 730",
+    "error_type": "noun_form",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu l-ai prins şi pe el cu ceilalţi?",
+    "target": "Nu l-ai prins şi pe el cu ceilalţi?",
+    "output": "Nu l - ai prins și pe el cu ceilalți ?",
+    "error_type": "agreement",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Persoane diferite reacționează la diverși factori în mod diferit.",
+    "target": "Persoane diferite reacționează la diverși factori în mod diferit.",
+    "output": "Persoane diferite reacționează la diverși factori în mod diferit .",
+    "error_type": "punctuation",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "1935) 1871: Christian Morgenstern, poet, scriitor si traducator german (d.",
+    "target": "1935) 1871: Christian Morgenstern, poet, scriitor și traducător german (d.",
+    "output": "1935 ) 1871 : Christian Morgenstern , poet , scriitor și traducător german ( d .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "si",
+      "traducator"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "În 1918, Tampeere a jucat un rol major, fiind un punct strategic în timpul Războiului Civil din Finlanda (ianuarie 28 - mai 15, 1918).",
+    "target": "În 1918, Tampere a jucat un rol major, fiind un punct strategic în timpul Războiului Civil din Finlanda (ianuarie 28 - mai 15, 1918).",
+    "output": "În 1918 , Tampeere a jucat un rol major , fiind un punct strategic în timpul Războiului Civil din Finlanda ( ianuarie 28 - mai 15 , 1918 ) .",
+    "error_type": "spelling",
+    "is_correct": false,
+    "flagged": [
+      "Tampeere"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Stai acolo, vorbeşti cu mine, mergi la micul dejun cu mine, ma imbrăţişezi.",
+    "target": "Stai acolo, vorbeşti cu mine, mergi la micul dejun cu mine, mă îmbrăţişezi.",
+    "output": "Stai acolo , vorbești cu mine , mergi la micul dejun cu mine , mă îmbrățișezi .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "ma",
+      "imbrățișezi"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "1925) 11 februarie: James Cimino, 82 ani, medic specializat în îngrijiri paliative (n.",
+    "target": "1925) 11 februarie: James Cimino, 82 ani, medic specializat în îngrijiri paliative (n.",
+    "output": "1925 ) 11 februarie : James Cimino , 82 ani , medic specializat în îngrijiri paliative ( n .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Ce? Vrei să spui că e vina mea?",
+    "target": "Ce? Vrei să spui că e vina mea?",
+    "output": "Ce ? Vrei să spui că e vina mea ?",
+    "error_type": "orthographic",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Cunoașterea limbii majorități îi aduce însă beneficii chiar mai importante decât cele economice: în timpul unui progrom al cehilor împotriva evreilor, magazinul lui Hermann Kafka nu este vandalizat, tocmai datorită dibăciei sale lingvistice.",
+    "target": "Cunoașterea limbii majorității îi aduce însă beneficii chiar mai importante decât cele economice: în timpul unui progrom al cehilor împotriva evreilor, magazinul lui Hermann Kafka nu este vandalizat, tocmai datorită dibăciei sale lingvistice.",
+    "output": "Cunoașterea limbii majorității îi aduce însă beneficii chiar mai importante decât cele economice : în timpul unui progrom al cehilor împotriva evreilor , magazinul lui Hermann Kafka nu este vandalizat , tocmai datorită dibăciei sale lingvistice .",
+    "error_type": "noun_form",
+    "is_correct": true,
+    "flagged": [
+      "majorități"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "SG al UEO a asistat in mod regulat la reuniunile minsteriale ale Consiliului Nord-Atlantic SG al NATO a participat la reuniunile ministeriale ale UEO.",
+    "target": "SG al UEO a asistat în mod regulat la reuniunile minsteriale ale Consiliului Nord-Atlantic SG al NATO a participat la reuniunile ministeriale ale UEO.",
+    "output": "SG al UEO a asistat în mod regulat la reuniunile minsteriale ale Consiliului Nord - Atlantic SG al NATO a participat la reuniunile ministeriale ale UEO .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "in"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "1933) 19 decembrie: Printesa Pauline de Württemberg, printesa de Wied (d.",
+    "target": "1933) 19 decembrie: Prințesa Pauline de Württemberg, prințesă de Wied (d.",
+    "output": "1933 ) 19 decembrie : Prințesa Pauline de Württemberg , Prințesă de Wied ( d .",
+    "error_type": "diacritics",
+    "is_correct": false,
+    "flagged": [
+      "Printesa",
+      "printesa"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "14 mai: Al Doilea Război Mondial: Rotterdam este bombardat de aviația germană; Țării de Jos se predă Germaniei.",
+    "target": "14 mai: Al Doilea Război Mondial: Rotterdam este bombardat de aviația germană; Țările de Jos se predă Germaniei.",
+    "output": "14 mai : Al Doilea Război Mondial : Rotterdam este bombardat de aviația germană ; Țările de Jos se predă Germaniei .",
+    "error_type": "noun_form",
+    "is_correct": true,
+    "flagged": [
+      "Țării"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "În acest timp, sa ştii că Marrot este tot mai criticat, nu mai trebuie presat.",
+    "target": "În acest timp, să ştii că Marrot este tot mai criticat, nu mai trebuie presat.",
+    "output": "În acest timp , să știi că Marrot este tot mai criticat , nu mai trebuie presat .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "sa"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Conform statisticilor Republica Moldova se află în declin demografic pe o perioadă de 24 de ani consecutiv.",
+    "target": "Conform statisticilor Republica Moldova se află în declin demografic pe o perioadă de 24 de ani consecutiv.",
+    "output": "Conform statisticilor , Republica Moldova se află în declin demografic pe o perioadă de 24 de ani consecutiv .",
+    "error_type": "no_change",
+    "is_correct": false,
+    "flagged": [
+      "statisticilor",
+      "Republica"
+    ],
+    "predicted_types": [
+      "punctuation",
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Kandel (Austria) Literatură: Gao Xingjian (China) Pace: Kim Dae-jung (Coreea de Sud) Note 2000",
+    "target": "Kandel (Austria) Literatură: Gao Xingjian (China) Pace: Kim Dae-jung (Coreea de Sud) Note 2000",
+    "output": "Kandel ( Austria ) Literatură : Gao Xingjian ( China ) Pace : Kim Dae - jung ( Coreea de Sud ) Note 2000",
+    "error_type": "noun_form",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Demografia La recensământul din 2001, populația Scoției era de 5.062.011.",
+    "target": "Demografia La recensământul din 2001, populația Scoției era de 5.062.011.",
+    "output": "Demografia La recensământul din 2001 , populația Scoției era de 5 . 062 . 011 .",
+    "error_type": "punctuation",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Cel mai înalt punct al continentului este muntele Kilimandjaro din Tanzania (5.895 m), iar cel mai jos punct este lacul Assal situat în micuța țară Djibouti (156 m sub nivelul mării).",
+    "target": "Cel mai înalt punct al continentului este muntele Kilimandjaro din Tanzania (5.895 m), iar cel mai jos punct este lacul Assal situat în micuța țară Djibouti (156 m sub nivelul mării).",
+    "output": "Cel mai înalt punct al continentului este muntele Kilimandjaro din Tanzania ( 5 . 895 m ) , iar cel mai jos punct este lacul Assal situat în micuța țară Djibouti ( 156 m sub nivelul mării ) .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "1991) Septembrie 5 septembrie: Adrian Marino, critic, istoric și teoretician literar român (d.",
+    "target": "1991) Septembrie 5 septembrie: Adrian Marino, critic, istoric și teoretician literar român (d.",
+    "output": "1991 ) Septembrie 5 septembrie : Adrian Marino , critic , istoric și teoretician literar român ( d .",
+    "error_type": "agreement",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Dar Cred că eşti o bonă de nota 10.",
+    "target": "Dar cred că eşti o bonă de nota 10.",
+    "output": "Dar Cred că ești o bonă de nota 10 .",
+    "error_type": "orthographic",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Cei doi împărați biruitori, Constantin și Licinius, s-au întâlnit la Mediolanum, unde a fost proclamat cunoscutul “Edict de la Mediolanum”.",
+    "target": "Cei doi împărați biruitori, Constantin și Licinius, s-au întâlnit la Mediolanum, unde a fost proclamat cunoscutul “Edict de la Mediolanum”.",
+    "output": "Cei doi împărați biruitori , Constantin și Licinius , s - au întâlnit la Mediolanum , unde a fost proclamat cunoscutul “ Edict de la Mediolanum ” .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Celulelor li se face într-un fel dor de casă; nu se simt ca acasă în vasul Petri.",
+    "target": "Celulelor li se face într-un fel dor de casă; nu se simt ca acasă în vasul Petri.",
+    "output": "Celulelor li se face într - un fel dor de casă ; nu se simt ca acasă în vasul Petri .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Viitorul Pământului pe termen lung este legat de cel al Soarelui.",
+    "target": "Viitorul Pământului pe termen lung este legat de cel al Soarelui.",
+    "output": "Viitorul Pământului pe termen lung este legat de cel al Soarelui .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "1677: Viitoarea aria a II-a a Angliei s-a căsătorit cu William de Orania.",
+    "target": "1677: Viitoarea Maria a II-a a Angliei s-a căsătorit cu William de Orania.",
+    "output": "1677 : Viitoarea aria a II - a a Angliei s - a căsătorit cu William de Orania .",
+    "error_type": "spelling",
+    "is_correct": false,
+    "flagged": [
+      "aria"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Trebuie sa terminam aceasta linie înainte de alegerii de luna viitoare.",
+    "target": "Trebuie sa terminam aceasta linie înainte de alegerile de luna viitoare.",
+    "output": "Trebuie sa terminam aceasta linie înainte de alegerile de luna viitoare .",
+    "error_type": "noun_form",
+    "is_correct": true,
+    "flagged": [
+      "alegerii"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Alianța DA a fost de acord, printre alte măsuri, să voteze ca bloc în parlament și consiliile locale și să prezinte candidați Comuni la alegerile naționale și locale.",
+    "target": "Alianța DA a fost de acord, printre alte măsuri, să voteze ca bloc în parlament și consiliile locale și să prezinte candidați comuni la alegerile naționale și locale.",
+    "output": "Alianța DA a fost de acord , printre alte măsuri , să voteze ca bloc în parlament și consiliile locale și să prezinte candidați Comuni la alegerile naționale și locale .",
+    "error_type": "orthographic",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "1958) 18 octombrie: Danièle Delorme, 89 ani, actriță și producator de film, franceza (n.",
+    "target": "1958) 18 octombrie: Danièle Delorme, 89 ani, actriță și producător de film, franceză (n.",
+    "output": "1958 ) 18 octombrie : Danièle Delorme , 89 ani , actriță și producător de film , franceză ( n .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "producator",
+      "franceza"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Mărculeț Ioan, Mărculeț Cătălina, Geodemographic observations on the roman-catholic religion in Transylvania (1930-2002), Revista Română de Geografie Politică, 2/2007, Oradea, 2007.",
+    "target": "Mărculeț Ioan, Mărculeț Cătălina, Geodemographic observations on the roman-catholic religion in Transylvania (1930-2002), Revista Română de Geografie Politică, 2/2007, Oradea, 2007.",
+    "output": "Mărculeț Ioan , Mărculeț Cătălina , Geodemographic observations on the roman - catholic religion in Transylvania ( 1930 - 2002 ) , Revista Română de Geografie Politică , 2 / 2007 , Oradea , 2007 .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "- Josh, ce se intampla? Ce cauţi tu aici?",
+    "target": "- Josh, ce se întâmplă? Ce cauţi tu aici?",
+    "output": "- Josh , ce se întâmplă ? Ce cauți tu aici ?",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "intampla"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "1980: În Iran, Ayatollahul Khomeini a aprobat în calitate de șef al statului, noua sttemă de stat, unde poate fi citită și semnătura stilizată a cuvântului Allah.",
+    "target": "1980: În Iran, Ayatollahul Khomeini a aprobat în calitate de șef al statului, noua stemă de stat, unde poate fi citită și semnătura stilizată a cuvântului Allah.",
+    "output": "1980 : În Iran , Ayatollahul Khomeini a aprobat în calitate de șef al statului , noua stată de stat , unde poate fi citită și semnătura stilizată a cuvântului Allah .",
+    "error_type": "spelling",
+    "is_correct": false,
+    "flagged": [
+      "sttemă"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "1931) 15 ianuarie: Stanisław Wyspiański, pictor, scriitor, poet, dramaturg si arhitect polonez (d.",
+    "target": "1931) 15 ianuarie: Stanisław Wyspiański, pictor, scriitor, poet, dramaturg și arhitect polonez (d.",
+    "output": "1931 ) 15 ianuarie : Stanisław Wyspiański , pictor , scriitor , poet , dramaturg și arhitect polonez ( d .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "si"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "La 1 iulie 1991, la Praga, a fost semnat Protocolul de încetare a valabilității Tratatului de la Varșovia (încheiat la 15 mai 1955).",
+    "target": "La 1 iulie 1991, la Praga, a fost semnat Protocolul de încetare a valabilității Tratatului de la Varșovia (încheiat la 15 mai 1955).",
+    "output": "La 1 iulie 1991 , la Praga , a fost semnat Protocolul de încetare a valabilității Tratatului de la Varșovia ( încheiat la 15 mai 1955 ) .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "După agenda lui Scarlett, întâlnirea are loc aici",
+    "target": "După agenda lui Scarlett, întâlnirea are loc aici.",
+    "output": "După agenda lui Scarlett , întâlnirea are loc aici .",
+    "error_type": "punctuation",
+    "is_correct": true,
+    "flagged": [
+      "aici"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Și după ce a aflat totul despre mama mea,",
+    "target": "Și după ce a aflat totul despre mama mea,",
+    "output": "Și după ce ai aflat totul despre mama mea ,",
+    "error_type": "no_change",
+    "is_correct": false,
+    "flagged": [
+      "a"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  },
+  {
+    "input": "Copilăria acestuia a fost dominată de educația dictată de către \"der Onkel\" - tradus ca unchiul (apelativ pentru regele Carol I al României), dupa care, nu în mod întamplător, a fost și numit.",
+    "target": "Copilăria acestuia a fost dominată de educația dictată de către \"der Onkel\" - tradus ca unchiul (apelativ pentru regele Carol I al României), după care, nu în mod întâmplător, a fost și numit.",
+    "output": "Copilăria acestuia a fost dominată de educația dictată de către \" der Onkel \" - tradus ca unchiul ( apelativ pentru regele Carol I al României ) , după care , nu în mod întâmplător , a fost și numit .",
+    "error_type": "diacritics",
+    "is_correct": true,
+    "flagged": [
+      "dupa",
+      "întamplător"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "2 august: Președintele Camerei SUA, Nancy Pelosi, sosește în Taiwan, în ciuda amenințărilor chineze de acțiune militară ca răspuns la vziita sa.",
+    "target": "2 august: Președintele Camerei SUA, Nancy Pelosi, sosește în Taiwan, în ciuda amenințărilor chineze de acțiune militară ca răspuns la vizita sa.",
+    "output": "2 august : Președintele Camerei SUA , Nancy Pelosi , sosește în Taiwan , în ciuda amenințărilor chineze de acțiune militară ca răspuns la poziția sa .",
+    "error_type": "spelling",
+    "is_correct": false,
+    "flagged": [
+      "vziita"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "1921) 3 iulie: Frank Devine, 77 ani, jurnalist și editor de ziar australian (n.",
+    "target": "1921) 3 iulie: Frank Devine, 77 ani, jurnalist și editor de ziar australian (n.",
+    "output": "1921 ) 3 iulie : Frank Devine , 77 ani , jurnalist și editor de ziar australian ( n .",
+    "error_type": "agreement",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "6 octombrie: Yago Iglesias, antrenor de fotbal spaniol",
+    "target": "6 octombrie: Yago Iglesias, antrenor de fotbal spaniol",
+    "output": "6 octombrie : Yago Iglesias , antrenor de fotbal spaniol",
+    "error_type": "orthographic",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "a de gând să te uiţi la toate chestiile astea acum?",
+    "target": "Ai de gând să te uiţi la toate chestiile astea acum?",
+    "output": "Ai de gând să te uiți la toate chestiile astea acum ?",
+    "error_type": "agreement",
+    "is_correct": true,
+    "flagged": [
+      "a"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  },
+  {
+    "input": "Îşi schimbă forma de-a lungul anilor iar câteodată, îşi pierde structura originală.",
+    "target": "Îşi schimbă forma de-a lungul anilor iar câteodată, îşi pierde structura originală.",
+    "output": "Își schimbă forma de - a lungul anilor , iar câteodată , își pierde structura originală .",
+    "error_type": "no_change",
+    "is_correct": false,
+    "flagged": [
+      "anilor",
+      "iar"
+    ],
+    "predicted_types": [
+      "punctuation",
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Județul este forma din 45 unități administrativ-teritoriale: 2 municipii, 3 orașe și 40 de comune.",
+    "target": "Județul este format din 45 unități administrativ-teritoriale: 2 municipii, 3 orașe și 40 de comune.",
+    "output": "Județul este forma din 45 unități administrativ - teritoriale : 2 municipii , 3 orașe și 40 de comune .",
+    "error_type": "spelling",
+    "is_correct": false,
+    "flagged": [
+      "forma"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Mică enciclopedie, Ioan Mărculeț (coord.), ISBN 978-973-0-16211-0, București, 2014 (online)",
+    "target": "Mică enciclopedie, Ioan Mărculeț (coord.), ISBN 978-973-0-16211-0, București, 2014 (online)",
+    "output": "Mică enciclopedie , Ioan Mărculeț ( coord . ) , ISBN 978 - 973 - 0 - 16211 - 0 , București , 2014 ( online )",
+    "error_type": "agreement",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu îl văd cu voi, negrii găozari ce sunteţi.",
+    "target": "Nu îl văd cu voi, negrii găozari ce sunteţi.",
+    "output": "Nu îl văd cu voi , negrii găozari ce sunteți .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "1887) 25 ianuarie: Prințul Franz de Bavaria (n.",
+    "target": "1887) 25 ianuarie: Prințul Franz de Bavaria (n.",
+    "output": "1887 ) 25 ianuarie : Prințul Franz de Bavaria ( n .",
+    "error_type": "no_change",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "întrucât datorită diferenţelor care există între statele membre în ceea ce priveşte domeniul de activitate al agentului şi brokerului de asigurări, este de dorit să se determine cât mai exact activităţile cărora li se aplică dispoziţiile prezentei directive;",
+    "target": "întrucât datorită diferenţelor care există între statele membre în ceea ce priveşte domeniul de activitate al agentului şi brokerului de asigurări, este de dorit să se determine cât mai exact activităţile cărora li se aplică dispoziţiile prezentei directive;",
+    "output": "întrucât datorită diferențelor care există între statele membre în ceea ce privește domeniul de activitate al agentului și brokerului de asigurări , este de dorit să se determine cât mai exact activitățile cărora li se aplică dispozițiile prezentei directive ;",
+    "error_type": "orthographic",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "31 mai: Ultimul conte anglo-saxon din Anglia, Waltheof de Northumbria, sunt executat.",
+    "target": "31 mai: Ultimul conte anglo-saxon din Anglia, Waltheof de Northumbria, este executat.",
+    "output": "31 mai : Ultimul conte anglo - saxon din Anglia , Waltheof de Northumbria , este executat .",
+    "error_type": "agreement",
+    "is_correct": true,
+    "flagged": [
+      "sunt"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  }
+]

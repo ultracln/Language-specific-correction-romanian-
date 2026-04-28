@@ -1,0 +1,32 @@
+loading dataset: upb-nlp/gec_ro_cna [test]
+raw split 'test': 2570 rows
+sentence pairs: 1285
+The tokenizer you are loading from 'results/seq2seq/best' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+100%|██████████| 1285/1285 [08:01<00:00,  2.67it/s]
+
+=== summary ===
+  dataset: upb-nlp/gec_ro_cna
+  split: test
+  n_pairs: 1285
+  exact_match_acc: 0.14474708171206227
+  changed_rate: 0.5431906614785992
+  spurious_rate: 0.0015564202334630351
+  stayed_same_rate: 0.42957198443579764
+
+wrote eval to results/eval
+loading dataset: upb-nlp/gec-ro-comments [test]
+raw split 'test': 1372 rows
+sentence pairs: 686
+The tokenizer you are loading from 'results/seq2seq/best' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue.
+100%|██████████| 686/686 [02:09<00:00,  5.29it/s]
+
+=== summary ===
+  dataset: upb-nlp/gec-ro-comments
+  split: test
+  n_pairs: 686
+  exact_match_acc: 0.05393586005830904
+  changed_rate: 0.5262390670553936
+  spurious_rate: 0.0
+  stayed_same_rate: 0.46938775510204084
+
+wrote eval to results/eval

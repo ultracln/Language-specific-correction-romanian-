@@ -1,0 +1,578 @@
+[
+  {
+    "input": "Autoritățiile americane și elvețiene au anunțat că vor începe urmăriri penale în cazul unor noi persoane și organizați în cadrul anchetei ce vizează corupția din FIFA informează presa internațională.",
+    "target": "Autoritățile americane și elvețiene au anunțat că vor începe urmăriri penale în cazul unor noi persoane și organizații, în cadrul anchetei ce vizează corupția din FIFA, informează presa internațională.",
+    "output": "Autoritățiile americane și elvețiene au anunțat că vor începe urmăriri penale în cazul unor noi persoane și organizați în cadrul anchetei ce vizează corupția din FIFA , informează presa internațională .",
+    "is_correct": false,
+    "flagged": [
+      "FIFA",
+      "informează"
+    ],
+    "predicted_types": [
+      "punctuation",
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Industria muzicală e un loc dur în care săți faci o carieră.",
+    "target": "Industria muzicală e un loc dur în care să-ți faci o carieră.",
+    "output": "Industria muzicală e un loc dur în care săți faci o carieră .",
+    "is_correct": false,
+    "flagged": [
+      "săți"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Arslan Prodimpex este o companie producătoare de biscuiții și napolitane din România, înfințată în anul 1993.",
+    "target": "Arslan Prodimpex este o companie producătoare de biscuiți și napolitane din România, înființată în anul 1993.",
+    "output": "Arslan Prodimpex este o companie producătoare de biscuții și napolitane din România , înfințată în anul 1993 .",
+    "is_correct": false,
+    "flagged": [
+      "biscuiții"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Acum experiența mea mă ajută să discut doar despre cea ce înseamnă să predai literatura.",
+    "target": "Acum, experiența mea mă ajută să discut doar despre ceea ce înseamnă să predai literatura.",
+    "output": "Acum experiența mea mă ajută să discut doar despre cea ce înseamnă să predai literatura .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Ministrul Justiției lea urat succes atât eleviilor cât și educatoriilor, arătând că sucesul nu vine decât prin efortul conjugat al tuturora.",
+    "target": "Ministrul Justiției le-a urat succes atât elevilor, cât și educatorilor, arătând că succesul nu vine decât prin efortul conjugat al tuturor.",
+    "output": "Ministrul Justiției , lea urat succes atât eleviilor cât și educatoriilor , arătând că sucesul nu vine decât prin efortul conjugat al tuturora .",
+    "is_correct": false,
+    "flagged": [
+      "Justiției",
+      "lea"
+    ],
+    "predicted_types": [
+      "orthographic",
+      "orthographic"
+    ]
+  },
+  {
+    "input": "Situația va rămâne instabilă până l-a dispariția familiei Roanne-Saint-Maurice.",
+    "target": "Situația va rămâne instabilă până la dispariția familiei Roanne-Saint-Maurice.",
+    "output": "Situația va rămâne instabilă până l - a dispariția familiei Roanne - Saint - Maurice .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu are rost să lucrați asupra articolului Ion milu dacăl lăsați așa.",
+    "target": "Nu are rost să lucrați asupra articolului Ion Milu dacă-l lăsați așa.",
+    "output": "Nu are rost să lucrați asupra articolului Ion milu dacă lăsați așa .",
+    "is_correct": false,
+    "flagged": [
+      "dacăl"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Participând la Teambuilding, delegați se reunesc în comitete in care adopta o rezoluție pe problemă respectivă care mai apoi este dezbătută în cadrul Adunării Generale.",
+    "target": "Participând la Teambuilding, delegații se reunesc în comitete în care adopta o rezoluție pe problemă respectivă, care mai apoi este dezbătută în cadrul Adunării Generale.",
+    "output": "Participând la Teambuilding , delegații se reunesc în comitete in care adopta o rezoluție pe problemă respectivă care mai apoi este dezbătută în cadrul Adunării Generale .",
+    "is_correct": false,
+    "flagged": [
+      "delegați"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "În Java, alfabetul jawi este f olosit și de catre limbile sundaneză, unde este denumit pegon.",
+    "target": "În Java, alfabetul jawi este folosit și de către limbile sudaneză, unde este denumit pegon.",
+    "output": "În Java , alfabetul jawi este f olovit și de către limbile sundaneză , unde este denumit pegon .",
+    "is_correct": false,
+    "flagged": [
+      "olosit",
+      "catre"
+    ],
+    "predicted_types": [
+      "no_change",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Pentru a face dovadă de zelul său, el luă hârtie de format mai mare, acoperii paginiile cu un scris mai mărunt, așa încât, cum spunea el, un singur caet făcea cât zece.",
+    "target": "Pentru a face dovadă de zelul său, el luă hârtie de format mai mare, acoperi paginile cu un scris mai mărunt, așa încât, cum spunea el, un singur caiet făcea cât zece.",
+    "output": "Pentru a face dovadă de zelul său , el luă hârtie de format mai mare , acoperii paginile cu un scris mai mărunt , așa încât , cum spunea el , un singur căpet făcea cât zece .",
+    "is_correct": false,
+    "flagged": [
+      "paginiile",
+      "caet"
+    ],
+    "predicted_types": [
+      "spelling",
+      "spelling"
+    ]
+  },
+  {
+    "input": "Ornamente asemănătoare(rozete, romburi) întâlnim și pe usciori ce marchează intrarea în biserică.",
+    "target": "Ornamente asemănătoare (rozete, romburi) întâlnim și pe usciorii ce marchează intrarea în biserică.",
+    "output": "Ornamente asemănătoare ( rozete , romburi ) întâlnim și pe uciori ce marchează intrarea în biserică .",
+    "is_correct": false,
+    "flagged": [
+      "usciori"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Deasemenea, capacitatea militariilor români a scăzut din cauza lipsei de combustibil, precum și de formare.",
+    "target": "De asemenea, capacitatea militarilor români a scăzut din cauza lipsei de combustibil, precum și de formare.",
+    "output": "Deasemenea , capacitatea militariilor români a scăzut din cauza lipsei de combustibil , precum și de formare .",
+    "is_correct": false,
+    "flagged": [
+      "militariilor"
+    ],
+    "predicted_types": [
+      "no_change"
+    ]
+  },
+  {
+    "input": "După acident, NASA a încercat să planifice mai realist zborurile navetelor: a adăugat un alt orbiter, Endeavour, la flota de navete spațiale în locul lui Challenger, și a colaborat cu Departamentul Apărării pentru a plasa mai mulți sateliți pe orbită cu ajutorul vehiculelor de unică folosință în locul navetelor.",
+    "target": "După accident, NASA a încercat să planifice mai realist zborurile navetelor: a adăugat un alt orbiter, Endeavour, la flota de navete spațiale în locul lui Challenger, și a colaborat cu Departamentul Apărării pentru a plasa mai mulți sateliți pe orbită cu ajutorul vehiculelor de unică folosință în locul navetelor.",
+    "output": "După acident , NASA a încercat să planifice mai realist zborurile navetelor : a adăugat un alt orbiter , Endeavour , la flota de navete spațiale în locul lui Challenger , și a colaborat cu Departamentul Apărării pentru a plasa mai mulți sateliți pe orbită cu ajutorul vehiculelor de unică folosință în locul navetelor .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Clopotnița, pe două niveluri, a fost așezată, conform obiceiului, separat de pereți lăcașului.",
+    "target": "Clopotnița, pe două nivele, a fost așezată, conform obiceiului, separat de pereții lăcașului.",
+    "output": "Clopotnița , pe două niveluri , a fost așezată , conform obiceiului , separat de pereți lăcașului .",
+    "is_correct": false,
+    "flagged": [
+      "pereți"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Programul a reprezentat lupta cea mai grea find nevoit să călătorească frecvent la Los Angeles între momentele în care era aclamat în media și diversele ceremoni de premiere.",
+    "target": "Programul a reprezentat lupta cea mai grea, fiind nevoit să călătorească frecvent la Los Angeles între momentele în care era aclamat în media și diversele ceremonii de premiere.",
+    "output": "Programul a reprezentat lupta cea mai grea find nevoit să călătorească frecvent la Los Angeles între momentele în care era aclamat în media și diversele ceremonii de premiere .",
+    "is_correct": false,
+    "flagged": [
+      "ceremoni"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Incidentul care a cauzat scandalul este provocat de tânărul Bertram T. Cates care este profesor și a predat în școală elevilor săi teoria evoluționistă ai lui darwin, teorie care afirmă omul a luat naștere printrun proces evolutiv, și care combate învățătura biblică.",
+    "target": "Incidentul care a cauzat scandalul este provocat de tânărul Bertram T. Cates care este profesor și a predat în școală elevilor săi teoria evoluționistă a lui Darwin, teorie care afirmă omul a luat naștere printr-un proces evolutiv, și care combate învățătura biblică.",
+    "output": "Incidentul care a cauzat scandalul este provocat de tânărul Bertram T . Cates care este profesor și a predat în școală elevilor săi teoria evoluționistă a lui darwin , teorie care afirmă omul a luat naștere printrun proces evolutiv , și care combate învățătura biblică .",
+    "is_correct": false,
+    "flagged": [
+      "ai"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  },
+  {
+    "input": "Loiret, în anul 1962 a fost clasat Monument Istoric.",
+    "target": "Loiret, în anul 1962 a fost clasat Monument Istoric.",
+    "output": "Loiret , în anul 1962 a fost clasat Monument Istoric .",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Această arestare este un succes rar pentru forțele de poliție pakistaneze, care se confruntă cu activismul, corupția și crima.",
+    "target": "Această arestare este un succes rar pentru forțele de poliție pakistaneze, care se confruntă cu activismul, corupția și crima.",
+    "output": "Această arestare este un succes rar pentru forțele de poliție pakistaneze , care se confruntă cu activismul , corupția și crima .",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "În 1971-1972 prin străduința preotului Lazăr Voișan și cu donarea sumei de 25000 lei din partea Direcției Muzelor Istorice și de Artă București, biserica a fost reparată total și acoperita din nou.",
+    "target": "În 1971-1972 prin străduința preotului Lazăr Voișan și cu donarea sumei de 25000 lei din partea Direcției Muzeelor Istorice și de Artă București, biserica a fost reparată total și acoperită din nou.",
+    "output": "În 1971 - 1972 prin străduința preotului Lazăr Voișan și cu donarea sumei de 25000 lei din partea Direcției Muzelor Istorice și de Artă București , biserica a fost reparată total și acoperită din nou .",
+    "is_correct": false,
+    "flagged": [
+      "acoperita"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "După cel deal doilea război mondial și instaurarea regimului comunist, sistemul educațional liberal a fost înlocuit cu un sistem de tip sovietic, bazat pe ideologie și îndoctrinarea de masă.",
+    "target": "După cel de-al doilea război mondial și instaurarea regimului comunist, sistemul educațional liberal a fost înlocuit cu un sistem de tip sovietic, bazat pe ideologie și îndoctrinarea de masă.",
+    "output": "După cel al doilea război mondial și instaurarea regimului comunist , sistemul educațional liberal a fost înlocuit cu un sistem de tip sovietic , bazat pe ideologie și îndoctrinarea de masă .",
+    "is_correct": false,
+    "flagged": [
+      "deal"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Întro altă acepțiune, Luna nouă este adesea considerată ca fiind momentul apariției primei seceri lunare vizibile, după conjuncția astronomică.",
+    "target": "Într-o altă accepțiune, Luna nouă este adesea considerată ca fiind momentul apariției primei seceri lunare vizibile, după conjuncția astronomică.",
+    "output": "Într - o altă acepțiune , Luna nouă este adesea considerată ca fiind momentul apariției primei seceri lunare vizibile , după conjuncția astronomică .",
+    "is_correct": false,
+    "flagged": [
+      "Întro"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Re-înregistrarea mărci se poate face cu cel mult 6 luni înainte ca aceasta să nu mai fie valabilă.",
+    "target": "Reînregistrarea mărcii se poate face cu cel mult 6 luni înainte ca aceasta să nu mai fie valabilă.",
+    "output": "Re - înregistrarea mărcii se poate face cu cel mult 6 luni înainte ca aceasta să nu mai fie valabilă .",
+    "is_correct": false,
+    "flagged": [
+      "mărci"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Bătălia de la Wagram durează două zile și este extrem de sangeroasă, rezultat al mari concentrați de artilerie.",
+    "target": "Bătălia de la Wagram durează două zile și este extrem de sângeroasă, rezultat al marii concentrații de artilerie.",
+    "output": "Bătălia de la Wagram durează două zile și este extrem de sârgoasă , rezultat al mari concentrații de artilerie .",
+    "is_correct": false,
+    "flagged": [
+      "sangeroasă",
+      "concentrați"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Apoi, el a fost folosit pentru aproape toate lansăriile space Shuttle.",
+    "target": "Apoi, el a fost folosit pentru aproape toate lansările Space Shuttle.",
+    "output": "Apoi , el a fost folosit pentru aproape toate lansările space Shuttle .",
+    "is_correct": false,
+    "flagged": [
+      "lansăriile"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "În 2010 sau făcut lucrările de reparație capitala atat de necesare.",
+    "target": "În 2010 s-au făcut lucrările de reparație capitală atât de necesare.",
+    "output": "În 2010 sau făcut lucrările de reparație capitală atât de necesare .",
+    "is_correct": false,
+    "flagged": [
+      "2010",
+      "capitala",
+      "atat"
+    ],
+    "predicted_types": [
+      "no_change",
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Realizând ca nu poate renunța la dragostea față de tânara creștină,patricianul păgân vine la Pavel din Tarsus unde locuia aleasa inimi sale și își declară dorința de a se converti la creștinism.",
+    "target": "Realizând ca nu poate renunța la dragostea față de tânăra creștină, patricianul păgân vine la Pavel din Tarsus unde locuia aleasa inimii sale și își declară dorința de a se converti la creștinism.",
+    "output": "Realizând ca nu poate renunța la dragostea față de tânara creștină , patricianul păgân vine la Pavel din Tarsus unde locuia aleasa înimii sale și își declară dorința de a se converti la creștinism .",
+    "is_correct": false,
+    "flagged": [
+      "inimi"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "În această perioadă neam concentrat mai mult pe deschiderea școli și lucrările necesare în acest scop.",
+    "target": "În această perioadă, ne-am concentrat mai mult pe deschiderea școlii și lucrările necesare în acest scop.",
+    "output": "În această perioadă ne am concentrat mai mult pe deschiderea școlii și lucrările necesare în acest scop .",
+    "is_correct": false,
+    "flagged": [
+      "neam",
+      "școli"
+    ],
+    "predicted_types": [
+      "orthographic",
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Pot fi introduse schimbării în strategie, structură, competențe în procese, sisteme de stimulare sau cultura în inovare a organizației, reorganizarea întregii organizați.",
+    "target": "Pot fi introduse schimbări în strategie, structură, competențe în procese, sisteme de stimulare sau cultura în inovare a organizației, reorganizarea întregii organizații.",
+    "output": "Pot fi introduse schimbările în strategie , structură , competențe în procese , sisteme de stimulare sau cultura în inovare a organizației , reorganizarea întregii organizați .",
+    "is_correct": false,
+    "flagged": [
+      "schimbării"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Orgon este convins că băi atul lui minte și îl izgonește din casă.",
+    "target": "Orgon este convins că băiatul lui minte și îl izgonește din casă.",
+    "output": "Orgon este convins că băi atul lui minte și îl izgonește din casă .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Sunt întâlniri care îi pot deschide mintea care îi pot ridica vorba cuiva solziii de pe ochi.",
+    "target": "Sunt întâlniri care îi pot deschide mintea, care îi pot ridica, vorba cuiva, solzii de pe ochi.",
+    "output": "Sunt întâlniri care îi pot deschide mintea , care îi pot ridica vorba cuiva solziii de pe ochi .",
+    "is_correct": false,
+    "flagged": [
+      "mintea",
+      "care"
+    ],
+    "predicted_types": [
+      "punctuation",
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Oasele craniului la nounăscuți și sugari nu sunt unite ca în cealaltă parte a vieți, iar presiunea determină creașterea dimensiunilor craniului.",
+    "target": "Oasele craniului la nou-născuți și sugari nu sunt unite ca în cealaltă parte a vieții, iar presiunea determină creșterea dimensiunilor craniului.",
+    "output": "Oasele craniului la nounăscuți și sugari nu sunt unite ca în cealaltă parte a vieții , iar presiunea determină creașterea dimensiunilor craniului .",
+    "is_correct": false,
+    "flagged": [
+      "vieți"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Înțelegerea percepților clienților asupra produselor firmelor constitue cheia pentru exploatarea oportunităților.",
+    "target": "Înțelegerea percepțiilor clienților asupra produselor firmelor constituie cheia pentru exploatarea oportunităților.",
+    "output": "Înțelegerea percepțiilor clienților asupra produselor firmelor constitue cheia pentru exploatarea oportunităților .",
+    "is_correct": false,
+    "flagged": [
+      "percepților"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Un exemplu de inovație care a condus la schimbari în sistemul de furnizare este E-comerțul: aceesta poate necesita un \"re-engineering\" al procesului de afaceri.",
+    "target": "Un exemplu de inovație care a condus la schimbări în sistemul de furnizare este E-comerțul: acesta poate necesita un \"re-engineering\" al procesului de afaceri.",
+    "output": "Un exemplu de inovație care a condus la schimbări în sistemul de furnizare este E - comerțul : această poate necesita un \" re - engineering \" al procesului de afaceri .",
+    "is_correct": false,
+    "flagged": [
+      "schimbari",
+      "aceesta"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "spelling"
+    ]
+  },
+  {
+    "input": "Dacă aveți dumneavoastră (nu doar amintiri, ci documente ce pot fii citate) le puteți adăuga.",
+    "target": "Dacă aveți dumneavoastră (nu doar amintiri, ci documente ce pot fi citate) le puteți adăuga.",
+    "output": "Dacă aveți dumneavoastră ( nu doar amintiri , ci documente ce pot fii citate ) le puteți adăuga .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Vacinul a fost distribuit în rețeaua de medicină de familie și medicina școlară în cursul lunii decembrie 2009.",
+    "target": "Vaccinul a fost distribuit în rețeaua de medicină de familie și medicină școlară în cursul lunii decembrie 2009.",
+    "output": "Vacinul a fost distribuit în rețeaua de medicină de familie și medicina școlară în cursul lunii decembrie 2009 .",
+    "is_correct": false,
+    "flagged": [
+      "Vacinul"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "G-Code, creată recent de dumneavoastră, nu este în comformitate cu regulile de la Wikipedia și v-a fii ștearsă în curând (dacă nu a fost ștearsă deja).",
+    "target": "G-Code, creată recent de dumneavoastră, nu este în conformitate cu regulile de la Wikipedia și va fi ștearsă în curând (dacă nu a fost ștearsă deja).",
+    "output": "G - Code , creată recent de dumneavoastră , nu este în comformitate cu regulile de la Wikipedia și v - a fii ștearsă în curând ( dacă nu a fost ștearsă deja ) .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "În 1677, ducele francisc de la Feuillade va cumpăra de la rege domenile regale Saint-Maurice, Saint-Haon și Crozet, ceea ce au format ducatul Roannais.",
+    "target": "În 1677, ducele Francisc de la Feuillade va cumpăra de la rege domeniile regale Saint-Maurice, Saint-Haon și Crozet, ceea ce au format ducatul Roannais.",
+    "output": "În 1677 , ducele francisc de la Feuillade va cumpăra de la rege domenile regale Saint - Maurice , Saint - Haon și Crozet , ceea ce a format ducatul Roannais .",
+    "is_correct": false,
+    "flagged": [
+      "au"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  },
+  {
+    "input": "Aspectul exterior sobru și impunător, zidurile crenelate, turnurile poligonale, contraforturile masive și, nu în ultimul rând, poziția sa dominatoare ne spun multe despre menirea mai puțin recomfortantă al castelului.",
+    "target": "Aspectul exterior sobru și impunător, zidurile crenelate, turnurile poligonale, contraforturile masive și, nu în ultimul rând, poziția sa dominatoare ne spun multe despre menirea mai puțin reconfortantă a castelului.",
+    "output": "Aspectul exterior sobru și impunător , zidurile crenelate , turnurile poligonale , contraforturile masive și , nu în ultimul rând , poziția sa dominatoare ne spun multe despre menirea mai puțin recomfortantă a castelului .",
+    "is_correct": false,
+    "flagged": [
+      "al"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  },
+  {
+    "input": "Copiații sintaxa de mai jos și adăugațio la începutul articolului biografic la care lucrați.",
+    "target": "Copiați sintaxa de mai jos și adăugați-o la începutul articolului biografic la care lucrați.",
+    "output": "Copiații sintaxa de mai jos și adăugațio la începutul articolului biografic la care lucrați .",
+    "is_correct": false,
+    "flagged": [
+      "adăugațio"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "Totuși, la doar o lună de la începerea campaniei, Arhiducele decide să abandoneze împărățirea pe Corpuri și să revină la vechiul sistem de comandă centralizat,deoarece a constat că această reformă, introdusă de doar cateva luni, nu era înțeleasă de majoritatea comandanților săi și nu a dat roade pe câmpul de bătăliie.",
+    "target": "Totuși, la doar o lună de la începerea campaniei, Arhiducele decide să abandoneze împărățirea pe Corpuri și să revină la vechiul sistem de comandă centralizat, deoarece a constat că această reformă, introdusă de doar câteva luni, nu era înțeleasă de majoritatea comandanților săi și nu a dat roade pe câmpul de bătălie.",
+    "output": "Totuși , la doar o lună de la începerea campaniei , Arhiducele decide să abandoneze împărățirea pe Corpuri și să revină la vechiul sistem de comandă centralizat , deoarece a constat că această reformă , introdusă de doar câteva luni , nu era înțeleasă de majoritatea comandanților săi și nu a dat roade pe câmpul de bătăliie .",
+    "is_correct": false,
+    "flagged": [
+      "cateva"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Aceasta a luat naștere datorită unui amendament constituțional din 2003 care a permis parlamentului să facă serviciul militar opțional.",
+    "target": "Aceasta a luat naștere datorită unui amendament constituțional din 2003 care a permis Parlamentului să facă serviciul militar opțional.",
+    "output": "Aceasta a luat naștere datorită unui amendament constituțional din 2003 care a permis parlamentului să facă serviciul militar opțional .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Apoi, la o săptămâna, capsula Liberty Bell 7 cu Virgil Ivan Grissom la bord, a pornit întrun zbor suborbital.",
+    "target": "Apoi, la o săptămână, capsula Liberty Bell 7 cu Virgil Ivan Grissom la bord, a pornit într-un zbor suborbital.",
+    "output": "Apoi , la o săptămână , capsula Liberty Bell 7 cu Virgil Ivan Grissom la bord , a pornit într - un zbor suborbital .",
+    "is_correct": true,
+    "flagged": [
+      "săptămâna",
+      "pornit",
+      "întrun"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "orthographic",
+      "orthographic"
+    ]
+  },
+  {
+    "input": "În scopul de a face acest software public, a fost creată o ramură oglindă readonly, cunoscută sub numele unui desert, anume cupcake.",
+    "target": "În scopul de a face acest software public, a fost creată o ramură oglindă read only, cunoscută sub numele unui desert, anume cupcake.",
+    "output": "În scopul de a face acest software public , a fost creată o ramură oglindă readonly , cunoscută sub numele unui desert , anume cupcake .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Whirlpool este cel mai mare producător de electrocasnice dintre lume.",
+    "target": "Whirlpool este cel mai mare producător de electrocasnice din lume.",
+    "output": "Whirlpool este cel mai mare producător de electrocasnice dintre lume .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Până săptămâna vitoare vom afla mai multe despre primi pași ai lui Jeremy Corbyn, ca și lider al opoziției.",
+    "target": "Până săptămâna viitoare vom afla mai multe despre primii pași ai lui Jeremy Corbyn, ca lider al opoziției.",
+    "output": "Până săptămâna vitoare vom afla mai multe despre primii pași ai lui Jeremy Corbyn , ca și lider al opoziției .",
+    "is_correct": false,
+    "flagged": [
+      "primi"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Astfel, a fost o educație religioasa sau de breaslă.",
+    "target": "Astfel, a fost o educație religioasă sau de breaslă.",
+    "output": "Astfel , a fost o educație religioasă sau de breaslă .",
+    "is_correct": true,
+    "flagged": [
+      "religioasa"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Cristiano ronaldo, nu pare să fie constructiva și a fost anulată.",
+    "target": "Cristiano Ronaldo, nu pare să fie constructivă și a fost anulată.",
+    "output": "Cristiano ronaldo , nu pare să fie constructivă și a fost anulată .",
+    "is_correct": false,
+    "flagged": [
+      "constructiva"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "După Revoluția română din 1989, din cauza lipsei de fonduri, multe unități au fost desfințate și multe echipamente au fost eliminate.",
+    "target": "După Revoluția română din 1989, din cauza lipsei de fonduri, multe unități au fost desființate și multe echipamente au fost eliminate.",
+    "output": "După Revoluția română din 1989 , din cauza lipsei de fonduri , multe unități au fost desfințate și multe echipamente au fost eliminate .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Am fost alături de utilizatori noi decat la începutul proiectului.",
+    "target": "Am fost alături de utilizatorii noi doar la începutul proiectului.",
+    "output": "Am fost alături de utilizatori noi decât la începutul proiectului .",
+    "is_correct": false,
+    "flagged": [
+      "decat"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Caligula a fost scris de Gore Vidal și confinantat de revista Penthouse iar Guccione și Franco Rossellini au fost producători.",
+    "target": "Caligula a fost scris de Gore Vidal și cofinanțat de revista Penthouse, iar Guccione și Franco Rossellini au fost producătorii.",
+    "output": "Caligula a fost scris de Gore Vidal și confinat de revista Penthouse iar Guccione și Franco Rossellini au fost producători .",
+    "is_correct": false,
+    "flagged": [
+      "confinantat"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  }
+]

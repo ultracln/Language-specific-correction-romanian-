@@ -1,0 +1,9 @@
+{
+  "dataset": "upb-nlp/gec_ro_cna",
+  "split": "test",
+  "n_pairs": 1285,
+  "exact_match_acc": 0.14474708171206227,
+  "changed_rate": 0.5431906614785992,
+  "spurious_rate": 0.0015564202334630351,
+  "stayed_same_rate": 0.42957198443579764
+}

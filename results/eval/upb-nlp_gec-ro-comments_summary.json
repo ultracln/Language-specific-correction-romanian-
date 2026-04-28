@@ -1,0 +1,9 @@
+{
+  "dataset": "upb-nlp/gec-ro-comments",
+  "split": "test",
+  "n_pairs": 686,
+  "exact_match_acc": 0.05393586005830904,
+  "changed_rate": 0.5262390670553936,
+  "spurious_rate": 0.0,
+  "stayed_same_rate": 0.46938775510204084
+}

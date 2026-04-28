@@ -1,0 +1,518 @@
+[
+  {
+    "input": "și ce mai puneţi, ca şi condiment?",
+    "target": "şi ce condiment mai puneți?",
+    "output": "și ce mai puneți ca și condiment ?",
+    "is_correct": false,
+    "flagged": [
+      ","
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Mă pregătesc să cobor jos.",
+    "target": "Mă pregătesc să cobor.",
+    "output": "Mă pregătesc să cobor jos .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Am în familie trei copii noi-născuți",
+    "target": "Am în familie trei copii nou-născuți.",
+    "output": "Am în familie trei copii noi - născuți .",
+    "is_correct": false,
+    "flagged": [
+      "născuți"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "An pierdut datorită lui",
+    "target": "Am pierdut din cauza lui.",
+    "output": "An pierdut datorită lui",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "omule ești geniaaaaaal, mă bucur enorm că exiști și mă bucur ca esti roman.",
+    "target": "omule ești genial, mă bucur enorm că exiști și mă bucur că ești român.",
+    "output": "omule ești geniaaaaaal , mă bucur enorm că exiști și mă bucur că esti roman .",
+    "is_correct": false,
+    "flagged": [
+      "ca"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Incredibil, nu mi-a părut rău nici macar o secundă că am vizionat acest clip.",
+    "target": "Incredibil, nu mi-a părut rău nici măcar o secundă că am vizionat acest videoclip.",
+    "output": "Incredibil , nu mi - a părut rău nici măcar o secundă că am vizionat acest clip .",
+    "is_correct": false,
+    "flagged": [
+      "macar"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Dupa apelu ăla telefonic mi-ai demonstrat că estii bucureștean adevarat.",
+    "target": "După apelul ăla telefonic, mi-ai demonstrat că ești bucureștean adevărat.",
+    "output": "Dupa apelul ăla telefonic mi - ai demonstrat că estii bucureștean adevarat .",
+    "is_correct": false,
+    "flagged": [
+      "apelu"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  },
+  {
+    "input": "Nu-i prost cine cere, ci cine da",
+    "target": "Nu-i prost cel care cere, ci cel care dă.",
+    "output": "Nu - i prost cine cere , ci cine da .",
+    "is_correct": false,
+    "flagged": [
+      "da"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Toate taxele sunt suportate de chirias.",
+    "target": "Toate taxele sunt suportate de chiriaș.",
+    "output": "Toate taxele sunt suportate de chirias .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu prea ai fost in chirie pe afara! Se vede. Ia sa te vad cum e la Germanica, de la 900, 1000 pentru o garsoniera.",
+    "target": "Nu prea ai fost în chirie pe afară! Se vede. Ia să te văd cum e în Germania, de la 900, 1000 pentru o garsonieră.",
+    "output": "Nu prea ai fost in chirie pe afara ! Se vede . Ia sa te vad cum e la Germanica , de la 900 , 1000 pentru o garsoniera .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Băi, voi ăștia care credeți in magie... A ti auzit de carti marcate?",
+    "target": "Băi, voi ăștia care credeți în magie... Ați auzit de cărți marcate?",
+    "output": "Băi , voi ăștia care credeți in magie . . . A ti auzit de carti marcate ?",
+    "is_correct": false,
+    "flagged": [
+      "A"
+    ],
+    "predicted_types": [
+      "agreement"
+    ]
+  },
+  {
+    "input": "Sigur nu s-au vorbit inainte ce carti sa aleaga fiecare.",
+    "target": "Sigur nu s-au vorbit înainte ce cărți să aleagă fiecare.",
+    "output": "Sigur nu s - au vorbit inainte ce carti sa aleaga fiecare .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Are cineva idee cum se numește melodia de la final",
+    "target": "Are cineva idee cum se numește melodia de la final?",
+    "output": "Are cineva idee cum se numește melodia de la final .",
+    "is_correct": false,
+    "flagged": [
+      "final"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "A scos si o surpriza din nas!",
+    "target": "A scos și o surpriză din nas!",
+    "output": "A scos si o surpriza din nas !",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu trebuia sa cistige el trebuia Paul Lungu!",
+    "target": "Nu trebuia să câștige el, trebuia Paul Lungu!",
+    "output": "Nu trebuia sa cistige el trebuia Paul Lungu !",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "lui ioana ia venit sa vomite.",
+    "target": "ioanei i-a venit să vomite.",
+    "output": "lui ioana , ia venit sa vomite .",
+    "is_correct": false,
+    "flagged": [
+      "ioana",
+      "ia"
+    ],
+    "predicted_types": [
+      "orthographic",
+      "orthographic"
+    ]
+  },
+  {
+    "input": "Si eu pot asa ceva.",
+    "target": "Și eu pot face așa ceva.",
+    "output": "Si eu pot asa ceva .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Faza cu cuiul a copiat-o aproape in totalitate de la videoclipul de acum 3 ani",
+    "target": "Faza cu cuiul a copiat-o aproape în totalitate din videoclipul de acum 3 ani.",
+    "output": "Faza cu cuiul a copiat - o aproape in totalitate de la videoclipul de acum 3 ani",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Ați observat ca si la Românii au talent a fost ales acelasi om sa aleaga nu vi se pare ciudat",
+    "target": "Ați observat că și la \"Românii au talent\" a fost pus același om să aleagă? Nu vi se pare ciudat?",
+    "output": "Ați observat ca si la Românii au talent a fost ales acelasi om sa aleaga nu vi se pare ciudat",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Cel mai frumos clip ar trebuii sa il faci cu Legenda Catalin Hâldan",
+    "target": "Cel mai frumos videoclip ar trebui să îl faci cu legenda Cătălin Hâldan.",
+    "output": "Cel mai frumos clip ar trebuii sa il faci cu Legenda Catalin Hâldan",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Greu să mai cucerească cineva Italia ca Mutu.",
+    "target": "Greu să mai cucerească cineva Italia ca Mutu.",
+    "output": "Greu să mai cucerească cineva Italia ca Mutu .",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Cred că era o legendă la Chelsea dar asta e viața lui el a ales",
+    "target": "Cred că era o legendă la Chelsea, dar asta e viața lui, el a ales.",
+    "output": "Cred că era o legendă la Chelsea dar asta e viața lui el a ales",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Dupa ce a tras o linie, a atins stelele.",
+    "target": "După ce a tras o linie, a atins stelele.",
+    "output": "După ce a tras o linie , a atins stelele .",
+    "is_correct": true,
+    "flagged": [
+      "Dupa"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Daca ma intrebati pe mine atingea suta de milioane pentru un transfer daca ar fii fost imaculat atat in viata personala cat si ca sportiv.",
+    "target": "Dacă mă întrebați pe mine, atingea sută de milioane pentru un transfer, dacă ar fi fost imaculat atât în viața personală, cât și ca sportiv.",
+    "output": "Daca ma intrebati pe mine atingea suta de milioane pentru un transfer daca ar fii fost imaculat atat in viata personala cat si ca sportiv .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "In America le dadea pe viata închisoare.",
+    "target": "În America le dădea închisoare pe viață.",
+    "output": "În America le dămă pe viață închisoare .",
+    "is_correct": false,
+    "flagged": [
+      "In",
+      "dadea",
+      "viata"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "cum au obtinut aceste venituri!",
+    "target": "cum au obținut aceste venituri?",
+    "output": "cum au obținut aceste venituri !",
+    "is_correct": false,
+    "flagged": [
+      "obtinut"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Dna. ministru pensiile le indexati dar salariile cand?",
+    "target": "Dna. ministru, pensiile le indexați, dar salariile când?",
+    "output": "Dna . ministru pensiile le indexati dar salariile cand ?",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Deștepți sunt ăia care nu au plătit taxe la stat",
+    "target": "Deștepți sunt ăia care nu au plătit taxe către stat.",
+    "output": "Deștepți sunt ăia care nu au plătit taxe la stat .",
+    "is_correct": false,
+    "flagged": [
+      "stat"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "De ce nu aplicati recalcularea pensiei in.functie de vechime de la 1 ianuarie 2024",
+    "target": "De ce nu aplicați recalcularea pensiei în funcție de vechime, de la 1 ianuarie 2024?",
+    "output": "De ce nu aplicati recalcularea pensiei in . functie de vechime de la 1 ianuarie 2024",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Imprumuta de la banci straine sa poata plati pensiile.",
+    "target": "Împrumută de la bănci străine să poată plăti pensiile.",
+    "output": "Imprumuta de la banci straine sa poata plati pensiile .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu cumva era romanca?",
+    "target": "Nu cumva era româncă?",
+    "output": "Nu cumva era romancă ?",
+    "is_correct": false,
+    "flagged": [
+      "romanca"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "\"Cine se aseamănă, se aduna.\" - se aplica si aici.",
+    "target": "\"Cine se aseamănă, se adună.\" - se aplică și aici.",
+    "output": "\" Cine se aseamănă , se adună . \" - se aplică si aici .",
+    "is_correct": false,
+    "flagged": [
+      "aduna",
+      "aplica"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Pe langa sumedenia de cunoștințe acumulate de-alungul timpului datorită canalului tău, mă regăsesc la vârsta de 21 de ani în ipostaza în care greșesc des",
+    "target": "Pe lângă sumedenia de cunoștințe acumulate de-a lungul timpului datorită canalului tău, mă regăsesc, la vârsta de 21 de ani, în ipostaza în care greșesc des.",
+    "output": "Pe langa sumedenia de cunoștințe acumulate de - alungul timpului datorită canalului tău , mă regăsesc la vârsta de 21 de ani în ipostaza în care greșesc des .",
+    "is_correct": false,
+    "flagged": [
+      "des"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Ma ajuta enorm informatia care o pui la dispozitie, gata de a fi digerata mai usor.",
+    "target": "Mă ajută enorm informația pe care o pui la dispoziție, gata de a fi digerată mai ușor.",
+    "output": "Ma ajuta enorm informatia care o pui la dispozitie , gata de a fi digerata mai usor .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Sfatul meu pe atat de simplu si mic pe atat de productiv si cu o mare impactare asupra fericirii generale este sa faci sport in fiecare zi",
+    "target": "Sfatul meu, pe atât de simplu și mic, pe atât de productiv și cu o mare impactare asupra fericirii generale, este să faci sport în fiecare zi.",
+    "output": "Sfatul meu pe atat de simplu si mic pe atat de productiv si cu o mare impactare asupra fericirii generale este sa faci sport in fiecare zi .",
+    "is_correct": false,
+    "flagged": [
+      "zi"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "De obicei, oamenii trec pe langa fericire pentru ca o vad intr-un viitor idealizat, fara a se bucura de prezent.",
+    "target": "De obicei, oamenii trec pe lângă fericire pentru că o văd într-un viitor idealizat, fără a se bucura de prezent.",
+    "output": "De obicei , oamenii trec pe langa fericire pentru ca o vad intr - un viitor idealizat , fara a se bucura de prezent .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Am auzit de multe ori despre meditatie si chiar am incercat de catava ori sa meditez, insa nu am stiut de unde si cum sa incep.",
+    "target": "Am auzit de multe ori despre meditație și chiar am încercat de câteva ori să meditez, însă nu am știut de unde și cum să încep.",
+    "output": "Am auzit de multe ori despre meditatie si chiar am incercat de câteva ori sa meditez , insa nu am stiut de unde si cum sa incep .",
+    "is_correct": false,
+    "flagged": [
+      "catava"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "La min 16 era sa ma bufneasca plansul dar m-am oprit",
+    "target": "La minutul 16 era să mă bufnească plânsul, dar m-am oprit.",
+    "output": "La min 16 era sa ma bufneasca plansul dar m - am oprit .",
+    "is_correct": false,
+    "flagged": [
+      "oprit"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Niciodata pana acum nu am inteles care e treaba cu meditatia, cum se faceî",
+    "target": "Până acum, nu am înțeles niciodată care e treaba cu meditația și cum se face.",
+    "output": "Niciodata pana acum nu am inteles care e treaba cu meditatia , cum se faceî .",
+    "is_correct": false,
+    "flagged": [
+      "faceî"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "In 2016 am dat bacul si chiar Ion mi-a picat.",
+    "target": "În 2016 am dat bacul și chiar Ion mi-a picat.",
+    "output": "In 2016 am dat bacul si chiar Ion mi - a picat .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Rebreanu a ales sa fie scriitor de limba romana, ddupa ce in prealabil a cochetat cu literatura maghiara",
+    "target": "Rebreanu a ales să fie scriitor de limbă română, după ce în prealabil a cochetat cu literatura maghiară.",
+    "output": "Rebreanu a ales sa fie scriitor de limba romana , după ce in prealabil a cochetat cu literatura maghiara",
+    "is_correct": false,
+    "flagged": [
+      "ddupa"
+    ],
+    "predicted_types": [
+      "spelling"
+    ]
+  },
+  {
+    "input": "E ca o telenovelă proastă.",
+    "target": "E ca o telenovelă proastă.",
+    "output": "E ca o telenovelă proastă .",
+    "is_correct": true,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "De parca angajatorul ma intreaba ce mai face Ion si Ana.",
+    "target": "De parcă angajatorul mă întreabă ce mai fac Ion și Ana.",
+    "output": "De parca angajatorul ma intreaba ce mai face Ion si Ana .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Nu am putut sa ma abtin sa nu comentez la acest clip genial si super captivant.",
+    "target": "Nu am putut să mă abțin să nu comentez la acest videoclip genial și super captivant.",
+    "output": "Nu am putut sa ma abtin sa nu comentez la acest clip genial si super captivant .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "Si astfel m-am hotărât sa o recitesc.",
+    "target": "Și astfel m-am hotărât să o recitesc.",
+    "output": "Si astfel m - am hotărât să o recitesc .",
+    "is_correct": false,
+    "flagged": [
+      "sa"
+    ],
+    "predicted_types": [
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Poate renuntam la mancarea procesata.",
+    "target": "Poate renunțăm la mâncarea procesată.",
+    "output": "Poate renuntam la mancarea procesata .",
+    "is_correct": false,
+    "flagged": [],
+    "predicted_types": []
+  },
+  {
+    "input": "O mica corectie, citricele (lamai si portocale) au venit din orient si erau cunoscute si consumate in Europa inainte de Magellan",
+    "target": "O mică corectare: citricele (lămâi și portocale) au venit din Orient și erau cunoscute și consumate în Europa înainte de Magellan.",
+    "output": "O mica corectie , citricele ( lamai si portocale ) au venit din orient si erau cunoscute si consumate in Europa inainte de Magellan .",
+    "is_correct": false,
+    "flagged": [
+      "Magellan"
+    ],
+    "predicted_types": [
+      "punctuation"
+    ]
+  },
+  {
+    "input": "Te-ai gandit sa citesti Seneca?",
+    "target": "Te-ai gândit să citești Seneca?",
+    "output": "Te - ai gândit sa citesti Seneca ?",
+    "is_correct": false,
+    "flagged": [
+      "gandit"
+    ],
+    "predicted_types": [
+      "no_change"
+    ]
+  },
+  {
+    "input": "Leustean, marar, ceapă, sare, pătrunjel, busuioc sau chiar magiran",
+    "target": "Leuștean, mărar, ceapă, sare, pătrunjel, busuioc sau chiar maghiran.",
+    "output": "Leustean , marar , ceapă , sare , pătrunjel , busuioc sau chiar maghiară",
+    "is_correct": false,
+    "flagged": [
+      "Leustean",
+      "marar",
+      "magiran"
+    ],
+    "predicted_types": [
+      "diacritics",
+      "diacritics",
+      "diacritics"
+    ]
+  },
+  {
+    "input": "Cel mai bun serialu, mi a placut mult.",
+    "target": "Cel mai bun serial, mi-a plăcut mult.",
+    "output": "Cel mai bun serialul , mi a placut mult .",
+    "is_correct": false,
+    "flagged": [
+      "serialu"
+    ],
+    "predicted_types": [
+      "noun_form"
+    ]
+  }
+]

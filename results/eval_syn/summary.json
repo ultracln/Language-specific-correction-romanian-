@@ -1,0 +1,55 @@
+{
+  "by_type": {
+    "agreement": {
+      "n": 312,
+      "exact_match_acc": 0.9423076923076923,
+      "changed_rate": 0.7307692307692307,
+      "spurious_rate": 0.009615384615384616,
+      "stayed_same_rate": 0.02564102564102564
+    },
+    "diacritics": {
+      "n": 344,
+      "exact_match_acc": 0.7209302325581395,
+      "changed_rate": 0.8924418604651163,
+      "spurious_rate": 0.011627906976744186,
+      "stayed_same_rate": 0.08430232558139535
+    },
+    "no_change": {
+      "n": 318,
+      "exact_match_acc": 0.9119496855345912,
+      "changed_rate": 0.0880503144654088,
+      "spurious_rate": 0.0880503144654088,
+      "stayed_same_rate": 0.0
+    },
+    "noun_form": {
+      "n": 333,
+      "exact_match_acc": 0.8828828828828829,
+      "changed_rate": 0.7777777777777778,
+      "spurious_rate": 0.012012012012012012,
+      "stayed_same_rate": 0.05405405405405406
+    },
+    "orthographic": {
+      "n": 234,
+      "exact_match_acc": 0.20085470085470086,
+      "changed_rate": 0.16666666666666666,
+      "spurious_rate": 0.01282051282051282,
+      "stayed_same_rate": 0.6495726495726496
+    },
+    "punctuation": {
+      "n": 171,
+      "exact_match_acc": 0.8362573099415205,
+      "changed_rate": 0.5847953216374269,
+      "spurious_rate": 0.017543859649122806,
+      "stayed_same_rate": 0.12280701754385964
+    },
+    "spelling": {
+      "n": 288,
+      "exact_match_acc": 0.4826388888888889,
+      "changed_rate": 0.7465277777777778,
+      "spurious_rate": 0.0,
+      "stayed_same_rate": 0.2326388888888889
+    }
+  },
+  "overall_acc": 0.7275,
+  "n": 2000
+}
