@@ -1,0 +1,11 @@
+data/synthetic.csv
+results/detector/tokenizer/special_tokens_map.json
+results/detector/tokenizer/tokenizer.json
+results/detector/tokenizer/tokenizer_config.json
+results/seq2seq/best/added_tokens.json
+results/seq2seq/best/config.json
+results/seq2seq/best/pytorch_model.bin
+results/seq2seq/best/special_tokens_map.json
+results/seq2seq/best/spiece.model
+results/seq2seq/best/tokenizer.json
+results/seq2seq/best/tokenizer_config.json
