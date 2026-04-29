@@ -124,8 +124,20 @@ def main():
     for k, v in df["error_type"].value_counts().items():
         print(f"  {k:<14} {v}")
 
+    #Adaugat Alex
+    df_original = pd.read_csv(args.csv)
+
+    try:
+        df_ssl = pd.read_csv('data/train_ssl.csv')
+        df = pd.concat([df_original, df_ssl], ignore_index=True)
+        print(f"SSL Augmentation: Added {len(df_ssl)} rows.")
+    except:
+        df = df_original
+
     df = df[df["correct"].astype(str).map(lambda s: len(s.split()) <= args.max_words)]
     print(f"after length filter: {len(df)} rows")
+
+    ######
 
     print("building aligned examples...")
     detector_rows, corrector_rows, skipped = build_examples(df)
@@ -168,6 +180,7 @@ def main():
     print(f"wrote test.csv with {len(df_test)} rows for end-to-end eval")
 
     print(f"\nwrote artifacts to {out_dir}")
+
 
 
 if __name__ == "__main__":
