@@ -23,8 +23,6 @@ ERROR_TYPES = [
     "punctuation",
     "noun_form",
     "agreement",
-    "mixed_typo",
-    "phonetic",
 ]
 ERROR_TYPE_TO_ID = {t: i for i, t in enumerate(ERROR_TYPES)}
 ID_TO_ERROR_TYPE = {i: t for t, i in ERROR_TYPE_TO_ID.items()}

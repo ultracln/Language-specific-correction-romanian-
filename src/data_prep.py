@@ -124,20 +124,8 @@ def main():
     for k, v in df["error_type"].value_counts().items():
         print(f"  {k:<14} {v}")
 
-    #Adaugat Alex
-    df_original = pd.read_csv(args.csv)
-
-    try:
-        df_ssl = pd.read_csv('data/train_ssl.csv')
-        df = pd.concat([df_original, df_ssl], ignore_index=True)
-        print(f"SSL Augmentation: Added {len(df_ssl)} rows.")
-    except:
-        df = df_original
-
     df = df[df["correct"].astype(str).map(lambda s: len(s.split()) <= args.max_words)]
     print(f"after length filter: {len(df)} rows")
-
-    ######
 
     print("building aligned examples...")
     detector_rows, corrector_rows, skipped = build_examples(df)
@@ -157,6 +145,25 @@ def main():
     cor_val = [r for r in corrector_rows if r["id"] in val_ids]
     cor_test = [r for r in corrector_rows if r["id"] in test_ids]
 
+    ssl_path = Path("data/train_ssl.csv")
+    if ssl_path.exists():
+        df_ssl = pd.read_csv(ssl_path)
+        df_ssl = df_ssl[df_ssl["correct"].astype(str).map(lambda s: len(s.split()) <= args.max_words)]
+        print(f"\nloading ssl augmentation from {ssl_path}: {len(df_ssl)} rows after length filter")
+        ssl_det, ssl_cor, ssl_skipped = build_examples(df_ssl)
+        offset = max((r["id"] for r in detector_rows), default=-1) + 1
+        for r in ssl_det:
+            r["id"] = r["id"] + offset
+        for r in ssl_cor:
+            r["id"] = r["id"] + offset
+        det_train.extend(ssl_det)
+        cor_train.extend(ssl_cor)
+        print(f"ssl detector examples appended to train: {len(ssl_det)}")
+        print(f"ssl corrector examples appended to train: {len(ssl_cor)}")
+        print(f"ssl skipped (empty): {ssl_skipped}")
+    else:
+        print(f"\nno ssl augmentation file at {ssl_path}; proceeding with synthetic only")
+
     print("\ndetector splits:")
     report("train", det_train)
     report("val", det_val)
@@ -174,10 +181,9 @@ def main():
     write_jsonl(out_dir / "corrector_val.jsonl", cor_val)
     write_jsonl(out_dir / "corrector_test.jsonl", cor_test)
 
-    test_ids_set = {r["id"] for r in det_test}
-    df_test = df.iloc[list(test_ids_set)] if False else df.loc[df.index.isin(test_ids_set)]
+    df_test = df.loc[df.index.isin(test_ids)]
     df_test.to_csv(out_dir / "test.csv", index=False)
-    print(f"wrote test.csv with {len(df_test)} rows for end-to-end eval")
+    print(f"wrote test.csv with {len(df_test)} rows for end-to-end eval (synthetic only)")
 
     print(f"\nwrote artifacts to {out_dir}")
 

@@ -15,15 +15,20 @@ corrector examples: 94659
 skipped (empty): 0
 splitting...
 
+loading ssl augmentation from data/train_ssl.csv: 390000 rows after length filter
+ssl detector examples appended to train: 390000
+ssl corrector examples appended to train: 390000
+ssl skipped (empty): 0
+
 detector splits:
-  train: 117000 examples
-    agreement        17774  (15.19%)
-    diacritics       22089  (18.88%)
-    no_change        17464  (14.93%)
-    noun_form        20031  (17.12%)
-    orthographic     12442  (10.63%)
-    punctuation      10652  ( 9.10%)
-    spelling         16548  (14.14%)
+  train: 507000 examples
+    agreement        17774  ( 3.51%)
+    diacritics      152089  (30.00%)
+    no_change        17464  ( 3.44%)
+    noun_form        20031  ( 3.95%)
+    orthographic    142442  (28.10%)
+    punctuation      10652  ( 2.10%)
+    spelling        146548  (28.90%)
   val: 6500 examples
     agreement          987  (15.18%)
     diacritics        1227  (18.88%)
@@ -42,13 +47,13 @@ detector splits:
     spelling           919  (14.14%)
 
 corrector splits (errored only):
-  train: 85225 examples
-    agreement        13795  (16.19%)
-    diacritics       21405  (25.12%)
-    noun_form        16442  (19.29%)
-    orthographic      9972  (11.70%)
-    punctuation       7438  ( 8.73%)
-    spelling         16173  (18.98%)
+  train: 475225 examples
+    agreement        13795  ( 2.90%)
+    diacritics      151405  (31.86%)
+    noun_form        16442  ( 3.46%)
+    orthographic    139972  (29.45%)
+    punctuation       7438  ( 1.57%)
+    spelling        146173  (30.76%)
   val: 4710 examples
     agreement          749  (15.90%)
     diacritics        1195  (25.37%)
@@ -63,6 +68,6 @@ corrector splits (errored only):
     orthographic       575  (12.17%)
     punctuation        408  ( 8.64%)
     spelling           902  (19.09%)
-wrote test.csv with 6500 rows for end-to-end eval
+wrote test.csv with 6500 rows for end-to-end eval (synthetic only)
 
 wrote artifacts to data/prepared

@@ -100,7 +100,7 @@ class Pipeline:
         if not any(flags):
             return {
                 "input": sentence,
-                "output": " ".join(tokens),
+                "output": sentence,
                 "any_error": False,
                 "flagged_tokens": [],
                 "predicted_types": [],
