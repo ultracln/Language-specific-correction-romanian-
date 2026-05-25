@@ -24,6 +24,7 @@ def parse_args():
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--max_examples", type=int, default=2000)
+    p.add_argument("--lowercase", action="store_true")
     return p.parse_args()
 
 
@@ -52,7 +53,7 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase)
 
     test_rows = load_test(args)
     if args.max_examples > 0:

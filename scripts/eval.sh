@@ -21,7 +21,8 @@ $EXEC_CMD python3 src/eval.py \
     --dataset upb-nlp/gec_ro_cna \
     --out_dir results/eval \
     --beam_size 4 \
-    --threshold 0.5
+    --threshold 0.5 \
+    --lowercase
 
 $EXEC_CMD python3 src/eval.py \
     --detector_ckpt results/detector/best.pt \
@@ -30,4 +31,5 @@ $EXEC_CMD python3 src/eval.py \
     --dataset upb-nlp/gec-ro-comments \
     --out_dir results/eval \
     --beam_size 4 \
-    --threshold 0.5
+    --threshold 0.5 \
+    --lowercase

@@ -10,6 +10,8 @@ sys.path.append(str(Path(__file__).resolve().parent))
 
 from utils import (
     ERROR_TYPE_TO_ID,
+    ERROR_TYPE_TO_TAG,
+    ID_TO_ERROR_TYPE,
     normalize_romanian,
     set_seed,
     token_error_labels,
@@ -63,7 +65,7 @@ def build_examples(df: pd.DataFrame):
         })
 
         if has_error == 1:
-            tagged = tag_errors(i_tokens, word_labels)
+            tagged = tag_errors(i_tokens, word_labels, word_type_labels, int(idx))
             target = " ".join(c_tokens)
             corrector_rows.append({
                 "id": int(idx),
@@ -75,18 +77,28 @@ def build_examples(df: pd.DataFrame):
     return detector_rows, corrector_rows, skipped
 
 
-def tag_errors(tokens: list[str], labels: list[int]) -> str:
+def tag_errors(tokens: list[str], labels: list[int], type_labels: list[int], row_id: int) -> str:
     out, in_err = [], False
-    for tok, lbl in zip(tokens, labels):
+    open_tag, close_tag = "<e_spell>", "</e_spell>"  # fallback, overwritten on span open
+    for tok, lbl, tid in zip(tokens, labels, type_labels):
         if lbl == 1 and not in_err:
-            out.append("<e>")
+            type_name = ID_TO_ERROR_TYPE.get(tid, "no_change")
+            if type_name == "no_change":
+                print(
+                    f"warning: row {row_id} has binary label 1 with type id 0 (no_change); falling back to <e_spell>",
+                    file=sys.stderr,
+                )
+                open_tag, close_tag = ERROR_TYPE_TO_TAG["spelling"]
+            else:
+                open_tag, close_tag = ERROR_TYPE_TO_TAG[type_name]
+            out.append(open_tag)
             in_err = True
         elif lbl == 0 and in_err:
-            out.append("</e>")
+            out.append(close_tag)
             in_err = False
         out.append(tok)
     if in_err:
-        out.append("</e>")
+        out.append(close_tag)
     return " ".join(out)
 
 

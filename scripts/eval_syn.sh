@@ -23,6 +23,7 @@ $EXEC_CMD python3 src/eval_syn.py \
     --max_length 192 \
     --beam_size 4 \
     --threshold 0.5 \
-    --max_examples 2000
+    --max_examples 2000 \
+    --lowercase
 
     

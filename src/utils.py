@@ -27,6 +27,20 @@ ERROR_TYPES = [
 ERROR_TYPE_TO_ID = {t: i for i, t in enumerate(ERROR_TYPES)}
 ID_TO_ERROR_TYPE = {i: t for t, i in ERROR_TYPE_TO_ID.items()}
 
+# typed span tags. one pair per linguistic error type that can be a span target.
+# no_change is intentionally excluded (it's not a span).
+ERROR_TYPE_TO_TAG = {
+    "diacritics":   ("<e_diac>",  "</e_diac>"),
+    "spelling":     ("<e_spell>", "</e_spell>"),
+    "orthographic": ("<e_ortho>", "</e_ortho>"),
+    "punctuation":  ("<e_punct>", "</e_punct>"),
+    "noun_form":    ("<e_noun>",  "</e_noun>"),
+    "agreement":    ("<e_agr>",   "</e_agr>"),
+}
+SPAN_TAGS_OPEN = [open_t for open_t, _ in ERROR_TYPE_TO_TAG.values()]
+SPAN_TAGS_CLOSE = [close_t for _, close_t in ERROR_TYPE_TO_TAG.values()]
+ALL_SPAN_TAGS = SPAN_TAGS_OPEN + SPAN_TAGS_CLOSE
+
 
 def normalize_romanian(text: str) -> str:
     text = unicodedata.normalize("NFC", text)
@@ -47,6 +61,11 @@ _TOKEN_RE = re.compile(r"\w+|[^\w\s]", re.UNICODE)
 
 def word_tokenize(text: str) -> list[str]:
     return _TOKEN_RE.findall(text)
+
+
+def lowercase_tokens(tokens: list[str]) -> list[str]:
+    """opt-in casing normalization for the detector input only."""
+    return [t.lower() for t in tokens]
 
 
 def word_tokenize_with_spans(text: str) -> list[tuple[str, int, int]]:

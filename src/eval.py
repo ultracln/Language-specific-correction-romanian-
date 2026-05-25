@@ -24,6 +24,7 @@ def parse_args():
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--max_examples", type=int, default=-1)
+    p.add_argument("--lowercase", action="store_true")
     return p.parse_args()
 
 
@@ -61,7 +62,7 @@ def main():
     print(f"sentence pairs: {len(pairs)}")
 
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase)
 
     n = len(pairs) if args.max_examples <= 0 else min(len(pairs), args.max_examples)
     correct = changed = spurious = stayed_same = total = 0

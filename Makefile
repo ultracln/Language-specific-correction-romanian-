@@ -4,8 +4,8 @@ REMOTE_DIR = /export/home/acs/stud/i/$(USER)/SSL_NLP_project
 
 TAR_EXCLUDE = --exclude='.git' --exclude='*.sif' --exclude='__pycache__' \
               --exclude='*.pyc' --exclude='data' --exclude='.DS_Store' \
-              --exclude='.venv' --exclude='*.jsonl' --exclude='results/*' \
-			  --exclude='slurm_outs/*' --exclude='CLAUDE.md' --exclude='old_results/*'
+              --exclude='.venv' --exclude='*.jsonl' --exclude='results' \
+              --exclude='slurm_outs' --exclude='CLAUDE.md' --exclude='old_results'
 
 SSH_QUIET = ssh -q -o LogLevel=QUIET
 

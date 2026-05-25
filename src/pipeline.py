@@ -8,8 +8,10 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 sys.path.append(str(Path(__file__).resolve().parent))
 
 from utils import (
+    ERROR_TYPE_TO_TAG,
     ERROR_TYPES,
     ID_TO_ERROR_TYPE,
+    lowercase_tokens,
     normalize_romanian,
     word_tokenize,
 )
@@ -27,11 +29,12 @@ def parse_args():
     p.add_argument("--text", type=str, default=None)
     p.add_argument("--input_file", type=str, default=None)
     p.add_argument("--output_file", type=str, default=None)
+    p.add_argument("--lowercase", action="store_true")
     return p.parse_args()
 
 
 class Pipeline:
-    def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold):
+    def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold, lowercase=False):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = max_length
         self.beam_size = beam_size
@@ -39,6 +42,8 @@ class Pipeline:
 
         ckpt = torch.load(det_ckpt, map_location=self.device)
         model_name = ckpt["model_name"]
+        # cli flag wins if set; otherwise pick up the value the checkpoint was trained with.
+        self.lowercase = lowercase or ckpt.get("args", {}).get("lowercase", False)
         self.det_tok = AutoTokenizer.from_pretrained(det_tok)
         self.detector = TwoHeadDetector(model_name, num_types=len(ERROR_TYPES))
         self.detector.load_state_dict(ckpt["state_dict"])
@@ -49,7 +54,10 @@ class Pipeline:
 
     @torch.no_grad()
     def detect(self, tokens):
-        enc = self.det_tok(tokens, is_split_into_words=True, truncation=True,
+        # detector sees lowercased input when enabled; the original `tokens` list
+        # (kept by the caller) is preserved so the corrector keeps casing.
+        det_input = lowercase_tokens(tokens) if self.lowercase else tokens
+        enc = self.det_tok(det_input, is_split_into_words=True, truncation=True,
                            max_length=self.max_length, return_tensors="pt").to(self.device)
         det_logits, type_logits = self.detector(enc["input_ids"], enc["attention_mask"])
         det_probs = torch.softmax(det_logits, -1)[0, :, 1]
@@ -68,18 +76,24 @@ class Pipeline:
                 word_types[wid] = type_pred[sub_idx].item()
         return word_flags, word_types
 
-    def tag(self, tokens, flags):
+    def tag(self, tokens, flags, types):
         out, in_err = [], False
-        for tok, lbl in zip(tokens, flags):
+        open_tag, close_tag = "<e_spell>", "</e_spell>"  # fallback, overwritten on span open
+        for tok, lbl, tid in zip(tokens, flags, types):
             if lbl == 1 and not in_err:
-                out.append("<e>")
+                type_name = ID_TO_ERROR_TYPE.get(tid, "no_change")
+                if type_name == "no_change":
+                    open_tag, close_tag = ERROR_TYPE_TO_TAG["spelling"]
+                else:
+                    open_tag, close_tag = ERROR_TYPE_TO_TAG[type_name]
+                out.append(open_tag)
                 in_err = True
             elif lbl == 0 and in_err:
-                out.append("</e>")
+                out.append(close_tag)
                 in_err = False
             out.append(tok)
         if in_err:
-            out.append("</e>")
+            out.append(close_tag)
         return " ".join(out)
 
     @torch.no_grad()
@@ -107,7 +121,7 @@ class Pipeline:
             }
         flagged_words = [tokens[i] for i, f in enumerate(flags) if f]
         flagged_types = [ID_TO_ERROR_TYPE[t] for i, t in enumerate(types) if flags[i]]
-        tagged = self.tag(tokens, flags)
+        tagged = self.tag(tokens, flags, types)
         output = self.correct(tagged)
         return {
             "input": sentence,
@@ -122,7 +136,7 @@ class Pipeline:
 def main():
     args = parse_args()
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase)
 
     if args.text:
         result = pipe(args.text)

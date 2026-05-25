@@ -31,4 +31,7 @@ $EXEC_CMD python3 src/detector.py \
     --warmup_ratio 0.1 \
     --type_loss_weight 0.5 \
     --num_workers 4 \
-    --seed 42
+    --seed 42 \
+    --lowercase \
+    --focal_gamma 2.0 \
+    --focal_alpha 0.25
