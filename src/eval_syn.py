@@ -11,6 +11,7 @@ sys.path.append(str(Path(__file__).resolve().parent))
 
 from utils import normalize_romanian, word_tokenize
 from pipeline import Pipeline
+from errant_eval import errant_score
 
 
 def parse_args():
@@ -25,6 +26,11 @@ def parse_args():
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--max_examples", type=int, default=2000)
     p.add_argument("--lowercase", action="store_true")
+    p.add_argument("--errant", action=argparse.BooleanOptionalAction, default=True,
+                   help="compute span-based F0.5 using manually-emitted M2 + upstream errant_compare")
+    p.add_argument("--errant_bin_dir", type=str, default=None,
+                   help="directory containing errant_compare; defaults to PATH lookup")
+    p.add_argument("--keep_tmp", action="store_true")
     return p.parse_args()
 
 
@@ -63,6 +69,7 @@ def main():
     by_type = defaultdict(lambda: {"correct": 0, "total": 0, "changed": 0, "spurious": 0, "stayed_same": 0})
     overall = {"correct": 0, "total": 0, "changed": 0, "spurious": 0, "stayed_same": 0}
     samples = []
+    sources, hypotheses, references = [], [], []
 
     for row in tqdm(test_rows):
         inc = row["incorrect"]
@@ -95,6 +102,10 @@ def main():
             by_type[etype]["stayed_same"] += 1
             overall["stayed_same"] += 1
 
+        sources.append(inc)
+        hypotheses.append(result["output"])
+        references.append(cor)
+
         if len(samples) < 50:
             samples.append({
                 "input": inc, "target": cor, "output": result["output"],
@@ -120,8 +131,24 @@ def main():
     overall_acc = overall["correct"] / max(overall["total"], 1)
     print(f"\noverall exact-match accuracy: {overall_acc:.4f}  (n={overall['total']})")
 
+    top_summary = {"by_type": summary, "overall_acc": overall_acc, "n": overall["total"]}
+
+    if args.errant:
+        print("\nrunning errant scoring (manual m2 + errant_compare)...")
+        errant_dir = out_dir / "errant_tmp"
+        errant_result = errant_score(sources, hypotheses, references, errant_dir,
+                                     keep_tmp=args.keep_tmp, bin_dir=args.errant_bin_dir)
+        if errant_result is not None:
+            top_summary["errant_precision"] = errant_result["precision"]
+            top_summary["errant_recall"] = errant_result["recall"]
+            top_summary["errant_f05"] = errant_result["f05"]
+            top_summary["errant_n"] = errant_result["n"]
+            print(f"errant: precision={errant_result['precision']:.4f}  recall={errant_result['recall']:.4f}  f0.5={errant_result['f05']:.4f}  n={errant_result['n']}")
+        else:
+            top_summary["errant_status"] = "failed; see stdout for details"
+
     with (out_dir / "summary.json").open("w") as f:
-        json.dump({"by_type": summary, "overall_acc": overall_acc, "n": overall["total"]}, f, indent=2)
+        json.dump(top_summary, f, indent=2)
     with (out_dir / "samples.json").open("w") as f:
         json.dump(samples, f, indent=2, ensure_ascii=False)
 

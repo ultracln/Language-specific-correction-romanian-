@@ -11,7 +11,7 @@ export TOKENIZERS_PARALLELISM=false
 export HF_TOKEN=$(cat $HOME/.hf_token 2>/dev/null)
 mkdir -p $HF_HOME
 
-IMAGE_PATH="$HOME/ml_general_v4.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 EXEC_CMD="singularity exec --nv --env HF_HOME=$HF_HOME --env HF_TOKEN=$HF_TOKEN --env TOKENIZERS_PARALLELISM=false --env CUDA_HOME=/usr/local/cuda $IMAGE_PATH"
 
 $EXEC_CMD python3 src/eval_syn.py \
@@ -24,6 +24,7 @@ $EXEC_CMD python3 src/eval_syn.py \
     --beam_size 4 \
     --threshold 0.5 \
     --max_examples 2000 \
-    --lowercase
+    --lowercase \
+    --errant_bin_dir /opt/conda/bin
 
     

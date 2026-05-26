@@ -10,7 +10,7 @@ export HF_HOME=$HOME/.cache/huggingface
 export TOKENIZERS_PARALLELISM=false
 mkdir -p $HF_HOME
 
-IMAGE_PATH="$HOME/ml_general_v4.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 EXEC_CMD="singularity exec --nv --env HF_HOME=$HF_HOME --env TOKENIZERS_PARALLELISM=false --env CUDA_HOME=/usr/local/cuda $IMAGE_PATH"
 
 echo "=== demo 1: diacritics error ==="

@@ -11,7 +11,7 @@ export TOKENIZERS_PARALLELISM=false
 export HF_TOKEN=$(cat $HOME/.hf_token 2>/dev/null)
 mkdir -p $HF_HOME
 
-IMAGE_PATH="$HOME/ml_general_v4.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 if [ ! -f "$IMAGE_PATH" ]; then
     echo "container not found"
     exit 1

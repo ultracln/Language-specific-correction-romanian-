@@ -9,7 +9,7 @@
 export HF_HOME=$HOME/.cache/huggingface
 mkdir -p $HF_HOME
  
-IMAGE_PATH="$HOME/ml_general_v4.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 if [ ! -f "$IMAGE_PATH" ]; then
     echo "container not found: $IMAGE_PATH"
     exit 1

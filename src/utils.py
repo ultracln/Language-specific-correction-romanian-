@@ -135,6 +135,75 @@ def levenshtein_align(src: list[str], tgt: list[str]) -> list[tuple[str, int, in
     return ops
 
 
+def write_m2(source_path: Path, target_path: Path, out_path: Path, normalize: bool = True) -> None:
+    """emit an m2 file from two parallel text files (one sentence per line).
+
+    each block in the output is:
+        S <space-joined source tokens>
+        A <start> <end>|||OTHER|||<correction>|||REQUIRED|||-NONE-|||0
+        ... (one A line per merged edit; noop if no edits)
+        <blank line>
+
+    spans are 0-indexed half-open intervals over word_tokenize(source). edits
+    merge consecutive non-match ops (sub/del/ins) into a single span; a match
+    op breaks the span. insertions have start == end. deletions emit an empty
+    correction string. error type is always 'OTHER' — errant_compare's default
+    span-based mode ignores categories.
+    """
+    source_path = Path(source_path)
+    target_path = Path(target_path)
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with source_path.open(encoding="utf-8") as fs, \
+         target_path.open(encoding="utf-8") as ft, \
+         out_path.open("w", encoding="utf-8") as fo:
+        for src_line, tgt_line in zip(fs, ft):
+            src = src_line.rstrip("\n")
+            tgt = tgt_line.rstrip("\n")
+            if normalize:
+                src = normalize_romanian(src)
+                tgt = normalize_romanian(tgt)
+            src_tokens = word_tokenize(src)
+            tgt_tokens = word_tokenize(tgt)
+
+            fo.write("S " + " ".join(src_tokens) + "\n")
+
+            if src_tokens == tgt_tokens:
+                fo.write("A -1 -1|||noop|||-NONE-|||REQUIRED|||-NONE-|||0\n")
+                fo.write("\n")
+                continue
+
+            ops = levenshtein_align(src_tokens, tgt_tokens)
+            # merge consecutive non-match ops into spans; match breaks the span.
+            groups: list[list[tuple[str, int, int]]] = []
+            current: list[tuple[str, int, int]] = []
+            for op in ops:
+                if op[0] == "match":
+                    if current:
+                        groups.append(current)
+                        current = []
+                else:
+                    current.append(op)
+            if current:
+                groups.append(current)
+
+            for group in groups:
+                src_idxs = [o[1] for o in group if o[0] in ("sub", "del")]
+                correction_tokens = [tgt_tokens[o[2]] for o in group if o[0] in ("sub", "ins")]
+                if src_idxs:
+                    start = min(src_idxs)
+                    end = max(src_idxs) + 1
+                else:
+                    # pure insertion: ins ops within a group share the same src index (the insertion point).
+                    start = group[0][1]
+                    end = start
+                correction = " ".join(correction_tokens)
+                fo.write(f"A {start} {end}|||OTHER|||{correction}|||REQUIRED|||-NONE-|||0\n")
+
+            fo.write("\n")
+
+
 def token_error_labels(incorrect_tokens: list[str], correct_tokens: list[str]) -> list[int]:
     labels = [0] * len(incorrect_tokens)
     ops = levenshtein_align(incorrect_tokens, correct_tokens)
