@@ -3,7 +3,12 @@ import sys
 from pathlib import Path
 
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForCausalLM
+
+try:
+    from Levenshtein import distance as _lev_distance
+except ImportError:
+    _lev_distance = None
 
 sys.path.append(str(Path(__file__).resolve().parent))
 
@@ -30,11 +35,18 @@ def parse_args():
     p.add_argument("--input_file", type=str, default=None)
     p.add_argument("--output_file", type=str, default=None)
     p.add_argument("--lowercase", action="store_true")
+    p.add_argument("--rescore_lm", type=str, default=None,
+                   help="HF causal LM id (e.g. readerbench/RoGPT2-base); enables top-k beam rescoring")
+    p.add_argument("--rescore_lambda", type=float, default=0.1,
+                   help="weight on the char edit-distance penalty against the input")
+    p.add_argument("--rescore_topk", type=int, default=None,
+                   help="number of beam candidates to rescore; defaults to beam_size")
     return p.parse_args()
 
 
 class Pipeline:
-    def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold, lowercase=False):
+    def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold, lowercase=False,
+                 rescore_lm=None, rescore_lambda=0.1, rescore_topk=None):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = max_length
         self.beam_size = beam_size
@@ -52,29 +64,59 @@ class Pipeline:
         self.s2s_tok = AutoTokenizer.from_pretrained(s2s_dir)
         self.s2s = AutoModelForSeq2SeqLM.from_pretrained(s2s_dir).to(self.device).eval()
 
+        # optional lm rescoring. loaded once here; reused for every sentence.
+        self.rescore_lm_name = rescore_lm
+        self.rescore_lambda = rescore_lambda
+        self.rescore_topk = rescore_topk if rescore_topk is not None else beam_size
+        if rescore_lm is not None:
+            self.lm_tok = AutoTokenizer.from_pretrained(rescore_lm)
+            self.lm = AutoModelForCausalLM.from_pretrained(rescore_lm).to(self.device).eval()
+        else:
+            self.lm_tok = None
+            self.lm = None
+
     @torch.no_grad()
-    def detect(self, tokens):
-        # detector sees lowercased input when enabled; the original `tokens` list
-        # (kept by the caller) is preserved so the corrector keeps casing.
+    def detect_probs(self, tokens):
+        """run the detector once and return raw per-subword arrays. no
+        thresholding here — the caller can apply any threshold against the
+        cached probs via flags_from_probs."""
+        # detector sees lowercased input when enabled; the caller's `tokens`
+        # list is preserved so the corrector keeps casing.
         det_input = lowercase_tokens(tokens) if self.lowercase else tokens
         enc = self.det_tok(det_input, is_split_into_words=True, truncation=True,
                            max_length=self.max_length, return_tensors="pt").to(self.device)
         det_logits, type_logits = self.detector(enc["input_ids"], enc["attention_mask"])
-        det_probs = torch.softmax(det_logits, -1)[0, :, 1]
-        type_pred = type_logits.argmax(-1)[0]
+        det_probs = torch.softmax(det_logits, -1)[0, :, 1].cpu().numpy()
+        type_pred = type_logits.argmax(-1)[0].cpu().numpy()
         word_ids = enc.word_ids(0)
+        return det_probs, word_ids, type_pred
 
-        word_flags = [0] * len(tokens)
-        word_types = [0] * len(tokens)
+    def flags_from_probs(self, det_probs, word_ids, type_pred, threshold, n_tokens=None):
+        """apply a threshold to cached subword probs, propagate to word-level
+        via the first-subword-of-each-word rule. n_tokens defaults to the
+        unique word-id count, which is correct only when no truncation
+        happened; pass len(tokens) explicitly to keep trailing truncated
+        tokens flagged as 0 (matches old detect() behavior)."""
+        if n_tokens is None:
+            non_none = [w for w in word_ids if w is not None]
+            n_tokens = (max(non_none) + 1) if non_none else 0
+        word_flags = [0] * n_tokens
+        word_types = [0] * n_tokens
         seen = set()
         for sub_idx, wid in enumerate(word_ids):
-            if wid is None or wid in seen:
+            if wid is None or wid in seen or wid >= n_tokens:
                 continue
             seen.add(wid)
-            if det_probs[sub_idx].item() >= self.threshold:
+            if det_probs[sub_idx] >= threshold:
                 word_flags[wid] = 1
-                word_types[wid] = type_pred[sub_idx].item()
+                word_types[wid] = int(type_pred[sub_idx])
         return word_flags, word_types
+
+    def detect(self, tokens):
+        """backward-compatible wrapper: forwards through detect_probs +
+        flags_from_probs using self.threshold."""
+        det_probs, word_ids, type_pred = self.detect_probs(tokens)
+        return self.flags_from_probs(det_probs, word_ids, type_pred, self.threshold, len(tokens))
 
     def tag(self, tokens, flags, types):
         out, in_err = [], False
@@ -107,10 +149,12 @@ class Pipeline:
         )
         return self.s2s_tok.decode(gen[0], skip_special_tokens=True)
 
-    def __call__(self, sentence):
+    def __call__(self, sentence, threshold=None):
+        thr = self.threshold if threshold is None else threshold
         sentence = normalize_romanian(sentence)
         tokens = word_tokenize(sentence)
-        flags, types = self.detect(tokens)
+        det_probs, word_ids, type_pred = self.detect_probs(tokens)
+        flags, types = self.flags_from_probs(det_probs, word_ids, type_pred, thr, len(tokens))
         if not any(flags):
             return {
                 "input": sentence,
