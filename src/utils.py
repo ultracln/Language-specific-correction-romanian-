@@ -93,40 +93,6 @@ def lowercase_tokens(tokens: list[str]) -> list[str]:
     return [t.lower() for t in tokens]
 
 
-def word_tokenize_with_spans(text: str) -> list[tuple[str, int, int]]:
-    """returns (token, start, end) triples preserving original char positions"""
-    return [(m.group(), m.start(), m.end()) for m in _TOKEN_RE.finditer(text)]
-
-
-def group_consecutive_spans(flags: list[int], tokens_with_spans: list[tuple[str, int, int]]):
-    """given binary flags and (token, start, end) triples, returns list of
-    (start_char, end_char, token_indices) for each contiguous flagged region"""
-    groups = []
-    i = 0
-    n = len(flags)
-    while i < n:
-        if flags[i] == 1:
-            j = i
-            while j < n and flags[j] == 1:
-                j += 1
-            start = tokens_with_spans[i][1]
-            end = tokens_with_spans[j - 1][2]
-            groups.append((start, end, list(range(i, j))))
-            i = j
-        else:
-            i += 1
-    return groups
-
-
-def apply_replacements(text: str, replacements: list[tuple[int, int, str]]) -> str:
-    """apply (start, end, new_text) replacements to text. ranges must not overlap.
-    processed in reverse so earlier offsets stay valid."""
-    out = text
-    for start, end, new_text in sorted(replacements, key=lambda x: -x[0]):
-        out = out[:start] + new_text + out[end:]
-    return out
-
-
 def levenshtein_align(src: list[str], tgt: list[str]) -> list[tuple[str, int, int]]:
     n, m = len(src), len(tgt)
     dp = [[0] * (m + 1) for _ in range(n + 1)]

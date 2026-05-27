@@ -49,13 +49,6 @@ def load_test(args):
     ]
 
 
-def f_beta(p, r, beta=0.5):
-    if p + r == 0:
-        return 0.0
-    b2 = beta * beta
-    return (1 + b2) * p * r / (b2 * p + r)
-
-
 def normalize_for_match(s: str) -> str:
     return " ".join(word_tokenize(normalize_romanian(s)))
 

@@ -28,8 +28,6 @@ def parse_args():
     p.add_argument("--detector_ckpt", type=str, default="results/detector/best.pt")
     p.add_argument("--detector_tokenizer", type=str, default="results/detector/tokenizer")
     p.add_argument("--seq2seq_dir", type=str, default="results/seq2seq/best")
-    p.add_argument("--ssl_pretrain_dir", type=str, default=None, 
-                   help="Optional SSL pre-trained encoder dir (e.g., results/ssl_dae/best)")
     p.add_argument("--max_length", type=int, default=128)
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
@@ -52,7 +50,7 @@ def parse_args():
 
 class Pipeline:
     def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold,
-                 ssl_pretrain_dir=None, lowercase=False,
+                 lowercase=False,
                  rescore_lm=None, rescore_lambda=0.1, rescore_topk=None,
                  diverse_beams=False, diversity_penalty=0.5):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -86,12 +84,6 @@ class Pipeline:
 
         ckpt = torch.load(det_ckpt, map_location=self.device)
         model_name = ckpt["model_name"]
-
-        # Optional SSL pre-training integration
-        if ssl_pretrain_dir is not None and Path(ssl_pretrain_dir).exists():
-            print(f"💾 Loading SSL pre-trained encoder from: {ssl_pretrain_dir}")
-            model_name = ssl_pretrain_dir
-
         # cli flag wins if set; otherwise pick up the value the checkpoint was trained with.
         self.lowercase = lowercase or ckpt.get("args", {}).get("lowercase", False)
         self.det_tok = AutoTokenizer.from_pretrained(det_tok)
@@ -302,7 +294,6 @@ def main():
     args = parse_args()
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
                     args.max_length, args.beam_size, args.threshold,
-                    ssl_pretrain_dir=args.ssl_pretrain_dir,
                     lowercase=args.lowercase,
                     rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
                     rescore_topk=args.rescore_topk,

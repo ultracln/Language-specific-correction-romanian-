@@ -69,9 +69,9 @@ results:
 prep:
 	sbatch -A $(ACCOUNT) scripts/prep.sh
 
-prepare-ssl-corpus:
-	mkdir -p data
-	singularity exec --env HF_HOME=$$HOME/.cache/huggingface $$HOME/ml_general.sif python3 src/prepare_unlabeled_corpus.py --sample
+# full corpus extraction from data/synthetic.csv via sbatch
+prep-ssl-corpus:
+	sbatch -A $(ACCOUNT) scripts/prep_ssl_corpus.sh
 
 train-ssl:
 	sbatch -A $(ACCOUNT) scripts/train_ssl.sh
