@@ -30,7 +30,7 @@ def parse_args():
     p.add_argument("--seq2seq_dir", type=str, default="results/seq2seq/best")
     p.add_argument("--ssl_pretrain_dir", type=str, default=None, 
                    help="Optional SSL pre-trained encoder dir (e.g., results/ssl_dae/best)")
-    p.add_argument("--max_length", type=int, default=192)
+    p.add_argument("--max_length", type=int, default=128)
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--text", type=str, default=None)

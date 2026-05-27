@@ -21,7 +21,7 @@ def parse_args():
     p.add_argument("--seq2seq_dir", type=str, default="results/seq2seq/best")
     p.add_argument("--test_csv", type=str, required=True)
     p.add_argument("--out_dir", type=str, default="results/eval")
-    p.add_argument("--max_length", type=int, default=192)
+    p.add_argument("--max_length", type=int, default=128)
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--max_examples", type=int, default=2000)

@@ -21,11 +21,36 @@ ERROR_TYPES = [
     "spelling",
     "orthographic",
     "punctuation",
-    "noun_form",
+    "morphology",
     "agreement",
 ]
 ERROR_TYPE_TO_ID = {t: i for i, t in enumerate(ERROR_TYPES)}
 ID_TO_ERROR_TYPE = {i: t for t, i in ERROR_TYPE_TO_ID.items()}
+
+# mapping from raw dataset error_type strings to the 7-class detector vocabulary.
+# the 400k synthetic dataset emits 10 noiser categories; this collapse keeps the
+# type head learnable. "mixed" rows have multiple errors but no per-token type;
+# they fall back to "spelling" as a generic span label.
+ERROR_TYPE_MAP = {
+    "no_change":               "no_change",
+    "diacritics":              "diacritics",
+    "spelling":                "spelling",
+    "social_media":            "spelling",
+    "orthographic":            "orthographic",
+    "punctuation":             "punctuation",
+    "noun_form":               "morphology",
+    "inflection":              "morphology",
+    "agreement":               "agreement",
+    "morphological_agreement": "agreement",
+    "mixed":                   "spelling",
+}
+
+
+def collapse_error_type(raw: str) -> str:
+    """map a raw dataset error_type onto the 7-class detector vocabulary.
+    unknown labels default to 'no_change'."""
+    return ERROR_TYPE_MAP.get(raw.strip(), "no_change")
+
 
 # typed span tags. one pair per linguistic error type that can be a span target.
 # no_change is intentionally excluded (it's not a span).
@@ -34,7 +59,7 @@ ERROR_TYPE_TO_TAG = {
     "spelling":     ("<e_spell>", "</e_spell>"),
     "orthographic": ("<e_ortho>", "</e_ortho>"),
     "punctuation":  ("<e_punct>", "</e_punct>"),
-    "noun_form":    ("<e_noun>",  "</e_noun>"),
+    "morphology":   ("<e_morph>", "</e_morph>"),
     "agreement":    ("<e_agr>",   "</e_agr>"),
 }
 SPAN_TAGS_OPEN = [open_t for open_t, _ in ERROR_TYPE_TO_TAG.values()]

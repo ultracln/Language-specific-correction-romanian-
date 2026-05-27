@@ -21,11 +21,11 @@ EXEC_CMD="singularity exec --nv --env HF_HOME=$HF_HOME --env HF_TOKEN=$HF_TOKEN 
 $EXEC_CMD python3 src/seq2seq.py \
     --data_dir data/prepared \
     --out_dir results/seq2seq \
-    --model_name google/mt5-small \
-    --max_source_length 192 \
-    --max_target_length 192 \
-    --batch_size 16 \
-    --grad_accum 2 \
+    --model_name google/mt5-base \
+    --max_source_length 128 \
+    --max_target_length 128 \
+    --batch_size 32 \
+    --grad_accum 1 \
     --lr 3e-4 \
     --weight_decay 0.005 \
     --epochs 3 \

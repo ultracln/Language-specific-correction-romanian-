@@ -18,7 +18,8 @@ EXEC_CMD="singularity exec --nv --env HF_HOME=$HF_HOME --env HF_TOKEN=$HF_TOKEN 
 #   detector threshold: 0.3 (from threshold sweep)
 #   rescoring LM: RoGPT2-medium (from LM size experiment)
 #   rescore lambda: 2.0 (from lambda sweep)
-#   diverse beams: enabled, penalty=0.5
+#   beam search: standard (the diverse beam search experiment regressed CNA F0.5
+#   from 0.488 to 0.283; the flag is retained but off by default).
 $EXEC_CMD python3 src/eval.py \
     --detector_ckpt results/detector/best.pt \
     --detector_tokenizer results/detector/tokenizer \
@@ -30,9 +31,7 @@ $EXEC_CMD python3 src/eval.py \
     --lowercase \
     --errant_bin_dir /opt/conda/bin \
     --rescore_lm readerbench/RoGPT2-medium \
-    --rescore_lambda 2.0 \
-    --diverse_beams \
-    --diversity_penalty 0.5
+    --rescore_lambda 2.0
 
 $EXEC_CMD python3 src/eval.py \
     --detector_ckpt results/detector/best.pt \
@@ -45,6 +44,4 @@ $EXEC_CMD python3 src/eval.py \
     --lowercase \
     --errant_bin_dir /opt/conda/bin \
     --rescore_lm readerbench/RoGPT2-medium \
-    --rescore_lambda 2.0 \
-    --diverse_beams \
-    --diversity_penalty 0.5
+    --rescore_lambda 2.0

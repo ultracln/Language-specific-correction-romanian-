@@ -26,7 +26,7 @@ def parse_args():
     p.add_argument("--data_dir", type=str, default="data/prepared")
     p.add_argument("--out_dir", type=str, default="results/detector")
     p.add_argument("--model_name", type=str, default="readerbench/RoBERT-large")
-    p.add_argument("--max_length", type=int, default=192)
+    p.add_argument("--max_length", type=int, default=128)
     p.add_argument("--batch_size", type=int, default=16)
     p.add_argument("--lr", type=float, default=2e-5)
     p.add_argument("--weight_decay", type=float, default=0.005)

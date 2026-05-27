@@ -22,7 +22,7 @@ $EXEC_CMD python3 src/eval_syn.py \
     --seq2seq_dir results/seq2seq/best \
     --test_csv data/prepared/test.csv \
     --out_dir results/eval_syn \
-    --max_length 192 \
+    --max_length 128 \
     --beam_size 4 \
     --threshold 0.5 \
     --max_examples 2000 \

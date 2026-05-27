@@ -22,9 +22,9 @@ $EXEC_CMD python3 src/detector.py \
     --data_dir data/prepared \
     --out_dir results/detector \
     --model_name readerbench/RoBERT-large \
-    --max_length 192 \
-    --batch_size 16 \
-    --grad_accum 2 \
+    --max_length 128 \
+    --batch_size 32 \
+    --grad_accum 1 \
     --lr 2e-5 \
     --weight_decay 0.005 \
     --epochs 3 \
