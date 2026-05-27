@@ -100,6 +100,9 @@ sweep-lambda:
 demo:
 	sbatch -A $(ACCOUNT) scripts/demo.sh
 
+demo-interactive:
+	bash scripts/demo_interactive.sh
+
 download-models:
 	mkdir -p $$HOME/.cache/huggingface
 	singularity exec --env HF_HOME=$$HOME/.cache/huggingface --env HF_TOKEN=$$(cat $$HOME/.hf_token 2>/dev/null) $$HOME/ml_general_v5.sif python3 download_models.py

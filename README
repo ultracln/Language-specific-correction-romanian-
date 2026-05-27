@@ -1,0 +1,179 @@
+PROJECT
+
+A Romanian grammatical error correction (GEC) system with a two-phase architecture.
+Phase 1 detects erroneous tokens; phase 2 rewrites the flagged spans. The project
+was built for the SSL and NLP master's courses and follows the approach of Tudose,
+Ruseti, and Dascalu (2025), "Show Me All Writing Errors: A Two-Phased Grammatical
+Error Corrector for Romanian", Information 16, 242.
+
+
+ARCHITECTURE
+
+Phase 1 is a RoBERT-large encoder with two classification heads on top of every
+subword. The binary head decides whether the token is erroneous. The 7-class head
+predicts the error type (no_change, diacritics, spelling, orthographic, punctuation,
+morphology, agreement). Token-level predictions are propagated up to the word
+level via the first-subword-of-each-word rule.
+
+Phase 2 is a mT5-base sequence-to-sequence model. Erroneous spans flagged by
+phase 1 are wrapped in typed tags (for example <e_diac> and </e_diac> around a
+diacritics span), and the resulting tagged sentence is given to mT5-base. The
+model generates a corrected sentence; tokens not inside any tagged span are
+mostly copied through.
+
+Two stages are optional. A language-model rescoring step (RoGPT2-medium) can
+rerank the corrector's top-k beam candidates. A self-supervised pretraining
+track (DAE over RoBERT-large) produces a checkpoint that can be substituted for
+the supervised detector's base model in a separate experiment. Neither is
+required for the canonical pipeline.
+
+
+DIRECTORY STRUCTURE
+
+src/
+  utils.py                     tokenization, alignment, span-tag vocabulary
+  data_prep.py                 CSV to JSONL conversion for training
+  detector.py                  phase 1 training
+  seq2seq.py                   phase 2 training
+  pipeline.py                  end-to-end inference
+  eval.py                      evaluation on real Romanian datasets
+  eval_syn.py                  evaluation on the synthetic test split
+  errant_eval.py               ERRANT span-based F0.5 scoring
+  sweep_threshold.py           detector threshold sweep
+  sweep_lambda.py              rescoring lambda sweep
+  demo_interactive.py          interactive terminal demo
+  ssl_corruption.py            DAE corruption module (teammate-owned)
+  ssl_trainer.py               DAE pretraining (teammate-owned)
+  ssl_trainer_safe.py          thin wrapper that fixes a save_pretrained issue
+  prepare_unlabeled_corpus.py  unlabeled text extraction (teammate-owned)
+scripts/                       SLURM batch and interactive scripts
+data/
+  synthetic.csv                training data (input)
+  prepared/                    train/val/test JSONL produced by prep
+results/                       training and evaluation outputs
+slurm_outs/                    captured SLURM stdout/stderr
+download_models.py             prefetch HuggingFace models
+Makefile                       local and cluster orchestration
+
+
+REQUIREMENTS
+
+The project runs on the FEP HPC cluster with SLURM. All training and evaluation
+happens inside a Singularity container at $HOME/ml_general_v5.sif on the cluster,
+which bundles PyTorch, transformers, datasets, spacy, errant 3.0, and the rest of
+the runtime dependencies. The local side needs only ssh and tar; nothing else is
+installed locally.
+
+
+INSTALLATION
+
+1. Clone the repository locally.
+2. Configure ssh access to fep.grid.pub.ro using the student account issued by the
+   course.
+3. Ensure the singularity image ml_general_v5.sif is present at
+   $HOME/ml_general_v5.sif on the cluster. The image is shared via the course's
+   HPC support; copy from a teammate or request a rebuild.
+4. Put the HuggingFace token at $HOME/.hf_token on the cluster (one line, no
+   newline at the end).
+5. Run make upload-data once to push data/synthetic.csv onto the cluster.
+
+
+WORKFLOW
+
+Code is edited locally and synced to the cluster with make upload. Every training,
+evaluation, and sweep runs as an sbatch job on the cluster via Makefile targets.
+Output is pulled back with make results. The typical loop is: edit locally,
+make upload, ssh to fep, make <target>, watch slurm_outs/, make results.
+
+
+MAKEFILE TARGETS
+
+Local file transfer
+  make upload            push code to the cluster (excludes data, models, results)
+  make upload-data       push data/synthetic.csv separately
+  make results           pull results/ back to local
+  make download          pull repository state back
+
+Data preparation
+  make prep              CSV to JSONL, stratified split
+  make prep-ssl-corpus   extract clean text for DAE pretraining (separate track)
+
+Training (on cluster)
+  make train-detector    fine-tune phase 1
+  make train-seq2seq     fine-tune phase 2
+  make train-ssl         DAE pretraining (separate experimental track)
+
+Evaluation
+  make eval              real datasets: CNA + RoComments, threshold 0.5 (baseline)
+  make eval-rescore      real datasets with RoGPT2-medium rescoring at lambda 2.0,
+                         threshold 0.3 (canonical configuration)
+  make eval-syn          synthetic test split
+
+Sweeps
+  make sweep-threshold   detector threshold over a fixed grid
+  make sweep-lambda      rescoring lambda at the chosen threshold
+
+Demos
+  make demo              canned five-sentence smoke test (sbatch)
+  make demo-interactive  interactive terminal session (uses srun --pty)
+
+Job management
+  make status            squeue for the current user
+  make cancel            cancel the most recent job
+
+
+RUNNING A DEMO
+
+After make upload, ssh into fep and run make demo-interactive. The script
+allocates a GPU via srun --pty and opens an interactive prompt inside the
+container. Type a Romanian sentence at the > prompt and press enter; the demo
+prints the tokenization, the flagged tokens, the tagged input passed to the
+corrector, and the final output. Type q (or quit, or exit) to leave; Ctrl+D
+also works. Example sentences are listed below.
+
+
+EXAMPLE SENTENCES
+
+Try sentences that exercise each error category. These are illustrative; the
+detector's calibration determines what is actually flagged on real input.
+
+  diacritics:   Romania este o tara frumoasa
+  spelling:     Aceasta este o popoziie buna
+  agreement:    Copii a venit acasa
+  morphology:   Eu mergem la magazin pentru paine
+  punctuation:  Salut cum esti
+  orthographic: Sa au facut atatea lucruri
+  clean:        Astazi este o zi frumoasa
+
+
+EVALUATING THE FULL PIPELINE
+
+The canonical evaluation runs through make eval-rescore. It uses threshold 0.3,
+RoGPT2-medium rescoring at lambda 2.0, and ERRANT F0.5 computed by emitting M2
+files manually from Romanian token alignment and calling errant_compare. Results
+land in results/eval_rescore/ as <dataset>_summary.json and <dataset>_samples.json.
+summary.json contains exact match, changed rate, spurious rate, stayed-same rate,
+and ERRANT precision/recall/F0.5. samples.json contains the first 50 examples
+with the system's outputs alongside the references, for qualitative inspection.
+
+
+REPRODUCING THE FULL EXPERIMENT
+
+1. make upload-data            push the dataset
+2. make download-models        cache HuggingFace models on the cluster
+3. make prep                   build train/val/test JSONL
+4. make train-detector         train phase 1
+5. make train-seq2seq          train phase 2
+6. make eval                   baseline real-data numbers
+7. make eval-rescore           rescored evaluation at threshold 0.3
+
+Steps 4 and 5 can run in parallel as separate sbatch jobs.
+
+
+FILES NOT IN THIS REPOSITORY
+
+Trained checkpoints in results/detector/ and results/seq2seq/ are produced by
+the training jobs and are not committed. data/synthetic.csv is uploaded
+separately via make upload-data. The HuggingFace cache at $HF_HOME on the
+cluster fills as models are downloaded; it is not part of this repository.
+
