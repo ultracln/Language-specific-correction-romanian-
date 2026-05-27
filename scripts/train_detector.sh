@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ssl_nlp_detector
-#SBATCH --time=08:00:00
+#SBATCH --time=12:00:00
 #SBATCH --partition=dgxa100
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
@@ -11,7 +11,7 @@ export TOKENIZERS_PARALLELISM=false
 export HF_TOKEN=$(cat $HOME/.hf_token 2>/dev/null)
 mkdir -p $HF_HOME
 
-IMAGE_PATH="$HOME/ml_general.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 if [ ! -f "$IMAGE_PATH" ]; then
     echo "container not found"
     exit 1
@@ -31,4 +31,7 @@ $EXEC_CMD python3 src/detector.py \
     --warmup_ratio 0.1 \
     --type_loss_weight 0.5 \
     --num_workers 4 \
-    --seed 42
+    --seed 42 \
+    --lowercase \
+    --focal_gamma 2.0 \
+    --focal_alpha 0.25

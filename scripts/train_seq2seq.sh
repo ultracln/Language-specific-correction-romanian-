@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ssl_nlp_seq2seq
-#SBATCH --time=10:00:00
+#SBATCH --time=12:00:00
 #SBATCH --partition=dgxa100
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
@@ -11,7 +11,7 @@ export TOKENIZERS_PARALLELISM=false
 export HF_TOKEN=$(cat $HOME/.hf_token 2>/dev/null)
 mkdir -p $HF_HOME
 
-IMAGE_PATH="$HOME/ml_general.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 if [ ! -f "$IMAGE_PATH" ]; then
     echo "container not found"
     exit 1

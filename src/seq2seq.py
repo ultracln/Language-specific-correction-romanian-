@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 sys.path.append(str(Path(__file__).resolve().parent))
 
-from utils import read_jsonl, set_seed
+from utils import ALL_SPAN_TAGS, read_jsonl, set_seed
 
 
 def parse_args():
@@ -119,7 +119,7 @@ def main():
 
     print(f"loading {args.model_name}")
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
-    tokenizer.add_tokens(["<e>", "</e>"], special_tokens=True)
+    tokenizer.add_tokens(ALL_SPAN_TAGS, special_tokens=True)
     model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name)
     model.resize_token_embeddings(len(tokenizer))
     model.to(device)

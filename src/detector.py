@@ -15,6 +15,7 @@ from utils import (
     ERROR_TYPES,
     ID_TO_ERROR_TYPE,
     align_to_subwords,
+    lowercase_tokens,
     read_jsonl,
     set_seed,
 )
@@ -36,24 +37,29 @@ def parse_args():
     p.add_argument("--num_workers", type=int, default=4)
     p.add_argument("--grad_accum", type=int, default=2)
     p.add_argument("--max_train_examples", type=int, default=-1)
+    p.add_argument("--lowercase", action="store_true")
+    p.add_argument("--focal_gamma", type=float, default=2.0)
+    p.add_argument("--focal_alpha", type=float, default=0.25)
     return p.parse_args()
 
 
 class DetectorDataset(Dataset):
-    def __init__(self, jsonl_path, tokenizer, max_length, limit=-1):
+    def __init__(self, jsonl_path, tokenizer, max_length, limit=-1, lowercase=False):
         self.rows = list(read_jsonl(jsonl_path))
         if limit > 0:
             self.rows = self.rows[:limit]
         self.tokenizer = tokenizer
         self.max_length = max_length
+        self.lowercase = lowercase
 
     def __len__(self):
         return len(self.rows)
 
     def __getitem__(self, idx):
         row = self.rows[idx]
-        enc = align_to_subwords(row["tokens"], row["labels"], self.tokenizer, self.max_length)
-        type_enc = align_to_subwords(row["tokens"], row["type_labels"], self.tokenizer, self.max_length)
+        tokens = lowercase_tokens(row["tokens"]) if self.lowercase else row["tokens"]
+        enc = align_to_subwords(tokens, row["labels"], self.tokenizer, self.max_length)
+        type_enc = align_to_subwords(tokens, row["type_labels"], self.tokenizer, self.max_length)
         return {
             "input_ids": enc["input_ids"],
             "attention_mask": enc["attention_mask"],
@@ -74,6 +80,33 @@ def collate(batch, pad_id):
     return {k: torch.tensor(v) for k, v in out.items()}
 
 
+class FocalLoss(nn.Module):
+    """focal loss for the binary detector head. type head keeps standard ce."""
+    def __init__(self, gamma: float = 2.0, alpha: float = 0.25, ignore_index: int = -100):
+        super().__init__()
+        self.gamma = gamma
+        self.alpha = alpha
+        self.ignore_index = ignore_index
+
+    def forward(self, logits, targets):
+        # logits: (N, 2), targets: (N,) with values in {0, 1, ignore_index}
+        valid = targets != self.ignore_index
+        if not valid.any():
+            return logits.sum() * 0.0
+        logits = logits[valid]
+        targets = targets[valid]
+        log_probs = torch.log_softmax(logits, dim=-1)
+        log_pt = log_probs.gather(1, targets.unsqueeze(1)).squeeze(1)
+        pt = log_pt.exp()
+        alpha_t = torch.where(
+            targets == 1,
+            torch.full_like(pt, self.alpha),
+            torch.full_like(pt, 1.0 - self.alpha),
+        )
+        loss = -alpha_t * (1.0 - pt).pow(self.gamma) * log_pt
+        return loss.mean()
+
+
 class TwoHeadDetector(nn.Module):
     def __init__(self, model_name: str, num_types: int, dropout: float = 0.1):
         super().__init__()
@@ -89,9 +122,9 @@ class TwoHeadDetector(nn.Module):
         return self.det_head(h), self.type_head(h)
 
 
-def evaluate(model, loader, device, type_weight):
+def evaluate(model, loader, device, type_weight, focal_gamma, focal_alpha):
     model.eval()
-    det_loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
+    det_loss_fn = FocalLoss(gamma=focal_gamma, alpha=focal_alpha, ignore_index=-100)
     type_loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
 
     total_loss = 0.0
@@ -150,8 +183,8 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     model = TwoHeadDetector(args.model_name, num_types=len(ERROR_TYPES)).to(device)
 
-    train_ds = DetectorDataset(Path(args.data_dir) / "detector_train.jsonl", tokenizer, args.max_length, args.max_train_examples)
-    val_ds = DetectorDataset(Path(args.data_dir) / "detector_val.jsonl", tokenizer, args.max_length)
+    train_ds = DetectorDataset(Path(args.data_dir) / "detector_train.jsonl", tokenizer, args.max_length, args.max_train_examples, lowercase=args.lowercase)
+    val_ds = DetectorDataset(Path(args.data_dir) / "detector_val.jsonl", tokenizer, args.max_length, lowercase=args.lowercase)
     print(f"train={len(train_ds)} val={len(val_ds)}")
 
     pad_id = tokenizer.pad_token_id
@@ -164,7 +197,7 @@ def main():
     total_steps = (len(train_loader) // args.grad_accum) * args.epochs
     sched = get_linear_schedule_with_warmup(optim, int(args.warmup_ratio * total_steps), total_steps)
 
-    det_loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
+    det_loss_fn = FocalLoss(gamma=args.focal_gamma, alpha=args.focal_alpha, ignore_index=-100)
     type_loss_fn = nn.CrossEntropyLoss(ignore_index=-100)
 
     best_f05 = -1.0
@@ -194,7 +227,7 @@ def main():
             if step % 50 == 0:
                 pbar.set_postfix({"loss": f"{running/(step+1):.4f}"})
 
-        metrics = evaluate(model, val_loader, device, args.type_loss_weight)
+        metrics = evaluate(model, val_loader, device, args.type_loss_weight, args.focal_gamma, args.focal_alpha)
         metrics["epoch"] = epoch + 1
         metrics["train_loss"] = running / len(train_loader)
         history.append(metrics)

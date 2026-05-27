@@ -4,7 +4,8 @@ REMOTE_DIR = /export/home/acs/stud/i/$(USER)/SSL_NLP_project
 
 TAR_EXCLUDE = --exclude='.git' --exclude='*.sif' --exclude='__pycache__' \
               --exclude='*.pyc' --exclude='data' --exclude='.DS_Store' \
-              --exclude='.venv' --exclude='*.jsonl' --exclude='results/**/*.pt'
+              --exclude='.venv' --exclude='*.jsonl' --exclude='results' \
+              --exclude='slurm_outs' --exclude='CLAUDE.md' --exclude='old_results'
 
 SSH_QUIET = ssh -q -o LogLevel=QUIET
 
@@ -55,7 +56,7 @@ download:
 
 results:
 	mkdir -p results
-	$(SSH_QUIET) $(REMOTE) "cd $(REMOTE_DIR) && tar --exclude='*.pt' -czf /tmp/ssl_nlp_results.tar.gz results"
+	$(SSH_QUIET) $(REMOTE) "cd $(REMOTE_DIR) && tar --exclude='*.pt' --exclude='*.bin' --exclude='*.model' -czf /tmp/ssl_nlp_results.tar.gz results"
 	scp -q $(REMOTE):/tmp/ssl_nlp_results.tar.gz /tmp/ssl_nlp_results.tar.gz
 	$(SSH_QUIET) $(REMOTE) "rm /tmp/ssl_nlp_results.tar.gz"
 	tar -xzf /tmp/ssl_nlp_results.tar.gz
@@ -87,13 +88,21 @@ eval-syn:
 eval:
 	sbatch -A $(ACCOUNT) scripts/eval.sh
 
-pipeline-test:
-	singularity exec --nv --env HF_HOME=$$HOME/.cache/huggingface $$HOME/ml_general.sif python3 src/pipeline.py \
-		--text "13 aprilie: Al Doilea Razboi Mondial: Trupele Germaniei au ocupat Belgradul."
+eval-rescore:
+	sbatch -A $(ACCOUNT) scripts/eval_rescore.sh
+
+sweep-threshold:
+	sbatch -A $(ACCOUNT) scripts/sweep_threshold.sh
+
+sweep-lambda:
+	sbatch -A $(ACCOUNT) scripts/sweep_lambda.sh
+
+demo:
+	sbatch -A $(ACCOUNT) scripts/demo.sh
 
 download-models:
 	mkdir -p $$HOME/.cache/huggingface
-	singularity exec --env HF_HOME=$$HOME/.cache/huggingface --env HF_TOKEN=$$(cat $$HOME/.hf_token 2>/dev/null) $$HOME/ml_general.sif python3 download_models.py
+	singularity exec --env HF_HOME=$$HOME/.cache/huggingface --env HF_TOKEN=$$(cat $$HOME/.hf_token 2>/dev/null) $$HOME/ml_general_v5.sif python3 download_models.py
 
 status:
 	squeue -u $$USER

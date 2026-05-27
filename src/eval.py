@@ -10,6 +10,7 @@ sys.path.append(str(Path(__file__).resolve().parent))
 
 from utils import normalize_romanian, word_tokenize
 from pipeline import Pipeline
+from errant_eval import errant_score
 
 
 def parse_args():
@@ -24,6 +25,19 @@ def parse_args():
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
     p.add_argument("--max_examples", type=int, default=-1)
+    p.add_argument("--lowercase", action="store_true")
+    p.add_argument("--errant", action=argparse.BooleanOptionalAction, default=True,
+                   help="compute span-based F0.5 using manually-emitted M2 + upstream errant_compare")
+    p.add_argument("--errant_bin_dir", type=str, default=None,
+                   help="directory containing errant_compare; defaults to PATH lookup")
+    p.add_argument("--keep_tmp", action="store_true")
+    p.add_argument("--rescore_lm", type=str, default=None,
+                   help="HF causal LM id; enables top-k beam rescoring")
+    p.add_argument("--rescore_lambda", type=float, default=0.1)
+    p.add_argument("--rescore_topk", type=int, default=None)
+    p.add_argument("--diverse_beams", action="store_true",
+                   help="enable diverse beam search in the corrector")
+    p.add_argument("--diversity_penalty", type=float, default=0.5)
     return p.parse_args()
 
 
@@ -61,11 +75,15 @@ def main():
     print(f"sentence pairs: {len(pairs)}")
 
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase,
+                    rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
+                    rescore_topk=args.rescore_topk,
+                    diverse_beams=args.diverse_beams, diversity_penalty=args.diversity_penalty)
 
     n = len(pairs) if args.max_examples <= 0 else min(len(pairs), args.max_examples)
     correct = changed = spurious = stayed_same = total = 0
     samples = []
+    sources, hypotheses, references = [], [], []
 
     for i in tqdm(range(n)):
         inc = pairs[i]["incorrect"]
@@ -90,6 +108,10 @@ def main():
         if has_err and not was_changed:
             stayed_same += 1
 
+        sources.append(inc)
+        hypotheses.append(result["output"])
+        references.append(cor)
+
         if len(samples) < 50:
             samples.append({
                 "input": inc, "target": cor, "output": result["output"],
@@ -107,7 +129,26 @@ def main():
         "spurious_rate": spurious / max(total, 1),
         "stayed_same_rate": stayed_same / max(total, 1),
     }
+
+    if args.errant:
+        print("\nrunning errant scoring (manual m2 + errant_compare)...")
+        errant_dir = out_dir / "errant_tmp"
+        errant_result = errant_score(sources, hypotheses, references, errant_dir,
+                                     keep_tmp=args.keep_tmp, bin_dir=args.errant_bin_dir)
+        if errant_result is not None:
+            summary["errant_precision"] = errant_result["precision"]
+            summary["errant_recall"] = errant_result["recall"]
+            summary["errant_f05"] = errant_result["f05"]
+            summary["errant_n"] = errant_result["n"]
+        else:
+            summary["errant_status"] = "failed; see stdout for details"
+
     print("\n=== summary ===")
+    if args.rescore_lm:
+        topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
+        print(f"  rescoring: enabled ({args.rescore_lm}, lambda={args.rescore_lambda}, topk={topk})")
+    if args.diverse_beams:
+        print(f"  diverse beams: enabled (penalty={args.diversity_penalty})")
     for k, v in summary.items():
         print(f"  {k}: {v}")
 

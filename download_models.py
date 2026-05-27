@@ -1,12 +1,13 @@
 import argparse
 
-from transformers import AutoModel, AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoModel, AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForCausalLM
 from datasets import load_dataset
 
 
 DEFAULT_MODELS = [
     "readerbench/RoBERT-large",
     "google/mt5-small",
+    "readerbench/RoGPT2-medium",
 ]
 
 DEFAULT_DATASETS = [
@@ -33,6 +34,8 @@ def main():
             AutoTokenizer.from_pretrained(name)
             if "mt5" in name or "t5" in name:
                 AutoModelForSeq2SeqLM.from_pretrained(name)
+            elif "gpt" in name.lower():
+                AutoModelForCausalLM.from_pretrained(name)
             else:
                 AutoModel.from_pretrained(name)
             print(f"  done.")

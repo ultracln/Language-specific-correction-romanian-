@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ssl_nlp_prep
-#SBATCH --time=00:30:00
+#SBATCH --time=12:00:00
 #SBATCH --partition=dgxa100
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
@@ -9,7 +9,7 @@
 export HF_HOME=$HOME/.cache/huggingface
 mkdir -p $HF_HOME
  
-IMAGE_PATH="$HOME/ml_general.sif"
+IMAGE_PATH="$HOME/ml_general_v5.sif"
 if [ ! -f "$IMAGE_PATH" ]; then
     echo "container not found: $IMAGE_PATH"
     exit 1
