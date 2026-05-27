@@ -21,6 +21,8 @@ def parse_args():
     p.add_argument("--detector_ckpt", type=str, default="results/detector/best.pt")
     p.add_argument("--detector_tokenizer", type=str, default="results/detector/tokenizer")
     p.add_argument("--seq2seq_dir", type=str, default="results/seq2seq/best")
+    p.add_argument("--ssl_pretrain_dir", type=str, default=None, 
+                   help="Optional SSL pre-trained encoder dir (e.g., results/ssl_dae/best)")
     p.add_argument("--max_length", type=int, default=192)
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--threshold", type=float, default=0.5)
@@ -31,7 +33,7 @@ def parse_args():
 
 
 class Pipeline:
-    def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold):
+    def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold, ssl_pretrain_dir=None):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = max_length
         self.beam_size = beam_size
@@ -39,6 +41,12 @@ class Pipeline:
 
         ckpt = torch.load(det_ckpt, map_location=self.device)
         model_name = ckpt["model_name"]
+        
+        # Optional SSL pre-training integration
+        if ssl_pretrain_dir is not None and Path(ssl_pretrain_dir).exists():
+            print(f"💾 Loading SSL pre-trained encoder from: {ssl_pretrain_dir}")
+            model_name = ssl_pretrain_dir
+        
         self.det_tok = AutoTokenizer.from_pretrained(det_tok)
         self.detector = TwoHeadDetector(model_name, num_types=len(ERROR_TYPES))
         self.detector.load_state_dict(ckpt["state_dict"])
@@ -122,7 +130,7 @@ class Pipeline:
 def main():
     args = parse_args()
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold)
+                    args.max_length, args.beam_size, args.threshold, ssl_pretrain_dir=args.ssl_pretrain_dir)
 
     if args.text:
         result = pipe(args.text)

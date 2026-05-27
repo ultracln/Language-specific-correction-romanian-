@@ -11,6 +11,25 @@ SSH_QUIET = ssh -q -o LogLevel=QUIET
 ACCOUNT = student
 
 # =============================================================================
+# SSL QUICK REFERENCE
+# =============================================================================
+.PHONY: ssl-help ssl-setup
+ssl-help:
+	@echo "=========================================="
+	@echo "SSL Implementation - Quick Commands"
+	@echo "=========================================="
+	@echo "make ssl-setup       - Create sample corpus"
+	@echo "make prepare-ssl-corpus - Create corpus from synthetic.csv"
+	@echo "make train-ssl       - Train DAE on cluster"
+	@echo ""
+	@echo "See QUICK_REFERENCE_SSL.md for more!"
+	@echo "=========================================="
+
+ssl-setup: prepare-ssl-corpus
+	@echo "✓ Sample corpus ready"
+	@echo "Try: python3 src/ssl_trainer.py --unlabeled_data data/unlabeled_corpus_sample.txt --out_dir results/ssl_dae_test --epochs 1 --batch_size 4"
+
+# =============================================================================
 # LOCAL COMMANDS
 # =============================================================================
 upload:
@@ -48,6 +67,13 @@ results:
 # =============================================================================
 prep:
 	sbatch -A $(ACCOUNT) scripts/prep.sh
+
+prepare-ssl-corpus:
+	mkdir -p data
+	singularity exec --env HF_HOME=$$HOME/.cache/huggingface $$HOME/ml_general.sif python3 src/prepare_unlabeled_corpus.py --sample
+
+train-ssl:
+	sbatch -A $(ACCOUNT) scripts/train_ssl.sh
 
 train-detector:
 	sbatch -A $(ACCOUNT) scripts/train_detector.sh
