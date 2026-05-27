@@ -139,15 +139,80 @@ class Pipeline:
         return " ".join(out)
 
     @torch.no_grad()
-    def correct(self, tagged):
+    def _lm_logprob(self, text: str) -> float:
+        """mean per-token log-likelihood under the rescoring lm. mean (not
+        sum) so candidates of different lengths are comparable: a shorter
+        candidate that happens to be high-probability per-token shouldn't
+        win automatically. empty input returns -inf so empty candidates lose."""
+        if not text:
+            return float("-inf")
+        enc = self.lm_tok(text, return_tensors="pt", truncation=True,
+                          max_length=self.max_length).to(self.device)
+        if enc["input_ids"].shape[1] < 2:
+            # need at least one prediction target after the shift
+            return float("-inf")
+        out = self.lm(input_ids=enc["input_ids"],
+                      attention_mask=enc.get("attention_mask"),
+                      labels=enc["input_ids"])
+        # hf causal lm returns mean cross-entropy over predicted positions.
+        return -out.loss.item()
+
+    @staticmethod
+    def _edit_distance(a: str, b: str) -> int:
+        """char-level levenshtein. prefers python-Levenshtein if installed,
+        else a small rolling-array dp."""
+        if a == b:
+            return 0
+        if _lev_distance is not None:
+            return _lev_distance(a, b)
+        n, m = len(a), len(b)
+        if n == 0:
+            return m
+        if m == 0:
+            return n
+        prev = list(range(m + 1))
+        for i in range(1, n + 1):
+            curr = [i] + [0] * m
+            for j in range(1, m + 1):
+                cost = 0 if a[i - 1] == b[j - 1] else 1
+                curr[j] = min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost)
+            prev = curr
+        return prev[m]
+
+    @torch.no_grad()
+    def correct(self, tagged, input_sentence):
         enc = self.s2s_tok(tagged, max_length=self.max_length, truncation=True, return_tensors="pt").to(self.device)
+        if self.lm is None:
+            gen = self.s2s.generate(
+                input_ids=enc["input_ids"],
+                attention_mask=enc["attention_mask"],
+                num_beams=self.beam_size,
+                max_length=self.max_length,
+            )
+            return self.s2s_tok.decode(gen[0], skip_special_tokens=True)
+
+        # rescoring path: keep top-k beams, rerank by lm fluency minus a small edit penalty.
+        k = min(self.rescore_topk, self.beam_size)
         gen = self.s2s.generate(
             input_ids=enc["input_ids"],
             attention_mask=enc["attention_mask"],
             num_beams=self.beam_size,
+            num_return_sequences=k,
             max_length=self.max_length,
+            early_stopping=True,
         )
-        return self.s2s_tok.decode(gen[0], skip_special_tokens=True)
+        candidates = self.s2s_tok.batch_decode(gen, skip_special_tokens=True)
+        best_total = float("-inf")
+        best_cand = candidates[0]
+        norm = max(len(input_sentence), 1)
+        for cand in candidates:
+            lm_score = self._lm_logprob(cand)
+            edit_penalty = self._edit_distance(cand, input_sentence) / norm
+            total = lm_score - self.rescore_lambda * edit_penalty
+            if total > best_total:
+                best_total = total
+                best_cand = cand
+        return best_cand
 
     def __call__(self, sentence, threshold=None):
         thr = self.threshold if threshold is None else threshold
@@ -166,7 +231,7 @@ class Pipeline:
         flagged_words = [tokens[i] for i, f in enumerate(flags) if f]
         flagged_types = [ID_TO_ERROR_TYPE[t] for i, t in enumerate(types) if flags[i]]
         tagged = self.tag(tokens, flags, types)
-        output = self.correct(tagged)
+        output = self.correct(tagged, sentence)
         return {
             "input": sentence,
             "tagged": tagged,
@@ -180,7 +245,9 @@ class Pipeline:
 def main():
     args = parse_args()
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase,
+                    rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
+                    rescore_topk=args.rescore_topk)
 
     if args.text:
         result = pipe(args.text)

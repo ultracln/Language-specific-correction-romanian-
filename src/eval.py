@@ -31,6 +31,10 @@ def parse_args():
     p.add_argument("--errant_bin_dir", type=str, default=None,
                    help="directory containing errant_compare; defaults to PATH lookup")
     p.add_argument("--keep_tmp", action="store_true")
+    p.add_argument("--rescore_lm", type=str, default=None,
+                   help="HF causal LM id; enables top-k beam rescoring")
+    p.add_argument("--rescore_lambda", type=float, default=0.1)
+    p.add_argument("--rescore_topk", type=int, default=None)
     return p.parse_args()
 
 
@@ -68,7 +72,9 @@ def main():
     print(f"sentence pairs: {len(pairs)}")
 
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase,
+                    rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
+                    rescore_topk=args.rescore_topk)
 
     n = len(pairs) if args.max_examples <= 0 else min(len(pairs), args.max_examples)
     correct = changed = spurious = stayed_same = total = 0
@@ -134,6 +140,9 @@ def main():
             summary["errant_status"] = "failed; see stdout for details"
 
     print("\n=== summary ===")
+    if args.rescore_lm:
+        topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
+        print(f"  rescoring: enabled ({args.rescore_lm}, lambda={args.rescore_lambda}, topk={topk})")
     for k, v in summary.items():
         print(f"  {k}: {v}")
 

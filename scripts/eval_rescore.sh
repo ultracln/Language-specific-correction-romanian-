@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ssl_nlp_eval
+#SBATCH --job-name=ssl_nlp_eval_rescore
 #SBATCH --time=12:00:00
 #SBATCH --partition=dgxa100
 #SBATCH --gres=gpu:1
@@ -14,26 +14,30 @@ mkdir -p $HF_HOME
 IMAGE_PATH="$HOME/ml_general_v5.sif"
 EXEC_CMD="singularity exec --nv --env HF_HOME=$HF_HOME --env HF_TOKEN=$HF_TOKEN --env TOKENIZERS_PARALLELISM=false --env CUDA_HOME=/usr/local/cuda $IMAGE_PATH"
 
-# to enable LM rescoring, add: --rescore_lm readerbench/RoGPT2-base
+# threshold 0.3 matches the sweep optimum; outputs land in results/eval_rescore/
+# to keep the baseline results/eval/ numbers untouched.
 $EXEC_CMD python3 src/eval.py \
     --detector_ckpt results/detector/best.pt \
     --detector_tokenizer results/detector/tokenizer \
     --seq2seq_dir results/seq2seq/best \
     --dataset upb-nlp/gec_ro_cna \
-    --out_dir results/eval \
+    --out_dir results/eval_rescore \
     --beam_size 4 \
-    --threshold 0.5 \
+    --threshold 0.3 \
     --lowercase \
-    --errant_bin_dir /opt/conda/bin
+    --errant_bin_dir /opt/conda/bin \
+    --rescore_lm readerbench/RoGPT2-base \
+    --rescore_lambda 0.1
 
-# to enable LM rescoring, add: --rescore_lm readerbench/RoGPT2-base
 $EXEC_CMD python3 src/eval.py \
     --detector_ckpt results/detector/best.pt \
     --detector_tokenizer results/detector/tokenizer \
     --seq2seq_dir results/seq2seq/best \
     --dataset upb-nlp/gec-ro-comments \
-    --out_dir results/eval \
+    --out_dir results/eval_rescore \
     --beam_size 4 \
-    --threshold 0.5 \
+    --threshold 0.3 \
     --lowercase \
-    --errant_bin_dir /opt/conda/bin
+    --errant_bin_dir /opt/conda/bin \
+    --rescore_lm readerbench/RoGPT2-base \
+    --rescore_lambda 0.1

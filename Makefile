@@ -62,6 +62,9 @@ eval-syn:
 eval:
 	sbatch -A $(ACCOUNT) scripts/eval.sh
 
+eval-rescore:
+	sbatch -A $(ACCOUNT) scripts/eval_rescore.sh
+
 sweep-threshold:
 	sbatch -A $(ACCOUNT) scripts/sweep_threshold.sh
 

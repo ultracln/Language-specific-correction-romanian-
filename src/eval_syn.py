@@ -31,6 +31,10 @@ def parse_args():
     p.add_argument("--errant_bin_dir", type=str, default=None,
                    help="directory containing errant_compare; defaults to PATH lookup")
     p.add_argument("--keep_tmp", action="store_true")
+    p.add_argument("--rescore_lm", type=str, default=None,
+                   help="HF causal LM id; enables top-k beam rescoring")
+    p.add_argument("--rescore_lambda", type=float, default=0.1)
+    p.add_argument("--rescore_topk", type=int, default=None)
     return p.parse_args()
 
 
@@ -59,7 +63,9 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase)
+                    args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase,
+                    rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
+                    rescore_topk=args.rescore_topk)
 
     test_rows = load_test(args)
     if args.max_examples > 0:
@@ -113,6 +119,10 @@ def main():
                 "flagged": result.get("flagged_tokens", []),
                 "predicted_types": result.get("predicted_types", []),
             })
+
+    if args.rescore_lm:
+        topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
+        print(f"\nrescoring: enabled ({args.rescore_lm}, lambda={args.rescore_lambda}, topk={topk})")
 
     print("\n=== per error type ===")
     print(f"{'type':<14} {'n':>6} {'acc':>7} {'changed':>9} {'spurious':>10} {'no_change_when_should':>22}")

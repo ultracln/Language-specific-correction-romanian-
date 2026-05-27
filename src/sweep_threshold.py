@@ -47,6 +47,10 @@ def parse_args():
     p.add_argument("--errant_bin_dir", type=str, default=None,
                    help="directory containing errant_compare; defaults to PATH lookup")
     p.add_argument("--keep_tmp", action="store_true")
+    p.add_argument("--rescore_lm", type=str, default=None,
+                   help="HF causal LM id; enables top-k beam rescoring (loaded once)")
+    p.add_argument("--rescore_lambda", type=float, default=0.1)
+    p.add_argument("--rescore_topk", type=int, default=None)
     return p.parse_args()
 
 
@@ -70,10 +74,16 @@ def main():
     print(f"thresholds: {args.thresholds}")
 
     # self.threshold is unused in the sweep loop; pipeline calls go through
-    # detect_probs + flags_from_probs with explicit thresholds.
+    # detect_probs + flags_from_probs with explicit thresholds. the lm
+    # (if any) is loaded once here and reused across all sentences/thresholds.
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
                     args.max_length, args.beam_size, threshold=0.5,
-                    lowercase=args.lowercase)
+                    lowercase=args.lowercase,
+                    rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
+                    rescore_topk=args.rescore_topk)
+    if args.rescore_lm:
+        topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
+        print(f"rescoring: enabled ({args.rescore_lm}, lambda={args.rescore_lambda}, topk={topk})")
 
     n = len(pairs) if args.max_examples <= 0 else min(len(pairs), args.max_examples)
     thresholds = args.thresholds
@@ -105,7 +115,7 @@ def main():
                 output = sentence
             else:
                 tagged = pipe.tag(tokens, flags, types)
-                output = pipe.correct(tagged)
+                output = pipe.correct(tagged, sentence)
             pred = normalize_for_match(output)
             is_correct = pred == truth
             was_changed = pred != inc_norm
