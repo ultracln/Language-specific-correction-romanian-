@@ -14,7 +14,8 @@ mkdir -p $HF_HOME
 IMAGE_PATH="$HOME/ml_general_v5.sif"
 EXEC_CMD="singularity exec --nv --env HF_HOME=$HF_HOME --env HF_TOKEN=$HF_TOKEN --env TOKENIZERS_PARALLELISM=false --env CUDA_HOME=/usr/local/cuda $IMAGE_PATH"
 
-# to enable LM rescoring, add: --rescore_lm readerbench/RoGPT2-base
+# to enable LM rescoring, add: --rescore_lm readerbench/RoGPT2-medium
+# to enable diverse beam search, add: --diverse_beams --diversity_penalty 0.5
 $EXEC_CMD python3 src/eval_syn.py \
     --detector_ckpt results/detector/best.pt \
     --detector_tokenizer results/detector/tokenizer \

@@ -68,12 +68,15 @@ eval-rescore:
 sweep-threshold:
 	sbatch -A $(ACCOUNT) scripts/sweep_threshold.sh
 
+sweep-lambda:
+	sbatch -A $(ACCOUNT) scripts/sweep_lambda.sh
+
 demo:
 	sbatch -A $(ACCOUNT) scripts/demo.sh
 
 download-models:
 	mkdir -p $$HOME/.cache/huggingface
-	singularity exec --env HF_HOME=$$HOME/.cache/huggingface --env HF_TOKEN=$$(cat $$HOME/.hf_token 2>/dev/null) $$HOME/ml_general.sif python3 download_models.py
+	singularity exec --env HF_HOME=$$HOME/.cache/huggingface --env HF_TOKEN=$$(cat $$HOME/.hf_token 2>/dev/null) $$HOME/ml_general_v5.sif python3 download_models.py
 
 status:
 	squeue -u $$USER

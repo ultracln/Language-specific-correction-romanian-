@@ -41,16 +41,45 @@ def parse_args():
                    help="weight on the char edit-distance penalty against the input")
     p.add_argument("--rescore_topk", type=int, default=None,
                    help="number of beam candidates to rescore; defaults to beam_size")
+    p.add_argument("--diverse_beams", action="store_true",
+                   help="enable diverse beam search in the corrector (one group per beam)")
+    p.add_argument("--diversity_penalty", type=float, default=0.5,
+                   help="inter-group diversity penalty for diverse beam search")
     return p.parse_args()
 
 
 class Pipeline:
     def __init__(self, det_ckpt, det_tok, s2s_dir, max_length, beam_size, threshold, lowercase=False,
-                 rescore_lm=None, rescore_lambda=0.1, rescore_topk=None):
+                 rescore_lm=None, rescore_lambda=0.1, rescore_topk=None,
+                 diverse_beams=False, diversity_penalty=0.5):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.max_length = max_length
         self.beam_size = beam_size
         self.threshold = threshold
+
+        # diverse beam search needs num_beams >= 2 (num_beam_groups == num_beams).
+        # the divisibility constraint (num_beams % num_beam_groups == 0) holds
+        # trivially since we set num_beam_groups = num_beams.
+        if diverse_beams and beam_size < 2:
+            raise ValueError(
+                "diverse_beams requires beam_size >= 2; got beam_size="
+                f"{beam_size}. diverse beam search is meaningless with a single beam."
+            )
+        self.diverse_beams = diverse_beams
+        self.diversity_penalty = diversity_penalty
+        if diverse_beams:
+            # transformers >= 4.59 moved group beam search to a custom_generate
+            # repo; both keys are required to route generate() there.
+            self._beam_kwargs = {
+                "num_beams": beam_size,
+                "num_beam_groups": beam_size,
+                "diversity_penalty": diversity_penalty,
+                "do_sample": False,
+                "custom_generate": "transformers-community/group-beam-search",
+                "trust_remote_code": True,
+            }
+        else:
+            self._beam_kwargs = {"num_beams": beam_size}
 
         ckpt = torch.load(det_ckpt, map_location=self.device)
         model_name = ckpt["model_name"]
@@ -180,39 +209,57 @@ class Pipeline:
         return prev[m]
 
     @torch.no_grad()
-    def correct(self, tagged, input_sentence):
+    def score_candidates(self, tagged, input_sentence):
+        """rescoring-only path: generate top-k beams, score each with the lm
+        and the char edit-distance penalty. returns one dict per candidate:
+            {"text": str, "lm_score": float, "edit_penalty": float}
+        all computation here is lambda-independent, so the result can be
+        cached across many rescore_lambda values."""
         enc = self.s2s_tok(tagged, max_length=self.max_length, truncation=True, return_tensors="pt").to(self.device)
-        if self.lm is None:
-            gen = self.s2s.generate(
-                input_ids=enc["input_ids"],
-                attention_mask=enc["attention_mask"],
-                num_beams=self.beam_size,
-                max_length=self.max_length,
-            )
-            return self.s2s_tok.decode(gen[0], skip_special_tokens=True)
-
-        # rescoring path: keep top-k beams, rerank by lm fluency minus a small edit penalty.
         k = min(self.rescore_topk, self.beam_size)
         gen = self.s2s.generate(
             input_ids=enc["input_ids"],
             attention_mask=enc["attention_mask"],
-            num_beams=self.beam_size,
             num_return_sequences=k,
             max_length=self.max_length,
             early_stopping=True,
+            **self._beam_kwargs,
         )
-        candidates = self.s2s_tok.batch_decode(gen, skip_special_tokens=True)
-        best_total = float("-inf")
-        best_cand = candidates[0]
+        candidates_text = self.s2s_tok.batch_decode(gen, skip_special_tokens=True)
         norm = max(len(input_sentence), 1)
-        for cand in candidates:
+        out = []
+        for cand in candidates_text:
             lm_score = self._lm_logprob(cand)
             edit_penalty = self._edit_distance(cand, input_sentence) / norm
-            total = lm_score - self.rescore_lambda * edit_penalty
-            if total > best_total:
-                best_total = total
-                best_cand = cand
-        return best_cand
+            out.append({"text": cand, "lm_score": lm_score, "edit_penalty": edit_penalty})
+        return out
+
+    @staticmethod
+    def pick_best(candidates, rescore_lambda):
+        """argmax of lm_score - rescore_lambda * edit_penalty. ties broken by
+        higher lm_score (more fluent under the rescoring lm) — deterministic
+        because max() with a tuple key is stable on ties via tuple ordering."""
+        best = max(
+            candidates,
+            key=lambda c: (c["lm_score"] - rescore_lambda * c["edit_penalty"], c["lm_score"]),
+        )
+        return best["text"]
+
+    @torch.no_grad()
+    def correct(self, tagged, input_sentence):
+        if self.lm is None:
+            enc = self.s2s_tok(tagged, max_length=self.max_length, truncation=True, return_tensors="pt").to(self.device)
+            gen = self.s2s.generate(
+                input_ids=enc["input_ids"],
+                attention_mask=enc["attention_mask"],
+                max_length=self.max_length,
+                **self._beam_kwargs,
+            )
+            return self.s2s_tok.decode(gen[0], skip_special_tokens=True)
+
+        # rescoring path: keep top-k beams, rerank by lm fluency minus a small edit penalty.
+        cands = self.score_candidates(tagged, input_sentence)
+        return self.pick_best(cands, self.rescore_lambda)
 
     def __call__(self, sentence, threshold=None):
         thr = self.threshold if threshold is None else threshold
@@ -247,7 +294,8 @@ def main():
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
                     args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase,
                     rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
-                    rescore_topk=args.rescore_topk)
+                    rescore_topk=args.rescore_topk,
+                    diverse_beams=args.diverse_beams, diversity_penalty=args.diversity_penalty)
 
     if args.text:
         result = pipe(args.text)

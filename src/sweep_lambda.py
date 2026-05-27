@@ -1,6 +1,7 @@
-"""run the eval pipeline at multiple detector thresholds on a single dataset,
-caching the detector forward pass per sentence so only the corrector re-runs
-per threshold."""
+"""run the eval pipeline at a fixed detector threshold over multiple
+rescore_lambda values. per sentence, the detector pass, the corrector
+generate, the lm scoring, and the edit distance are computed once and cached;
+only the argmax repeats per lambda."""
 import argparse
 import json
 import sys
@@ -17,14 +18,14 @@ from eval import make_pairs, normalize_for_match
 from errant_eval import errant_score
 
 
-def parse_thresholds(s: str) -> list[float]:
+def parse_lambdas(s: str) -> list[float]:
     try:
-        thresholds = [float(x.strip()) for x in s.split(",") if x.strip()]
+        lambdas = [float(x.strip()) for x in s.split(",") if x.strip()]
     except ValueError as e:
-        raise argparse.ArgumentTypeError(f"invalid --thresholds value: {e}")
-    if not thresholds:
-        raise argparse.ArgumentTypeError("--thresholds must contain at least one value")
-    return thresholds
+        raise argparse.ArgumentTypeError(f"invalid --lambdas value: {e}")
+    if not lambdas:
+        raise argparse.ArgumentTypeError("--lambdas must contain at least one value")
+    return lambdas
 
 
 def parse_args():
@@ -34,26 +35,27 @@ def parse_args():
     p.add_argument("--seq2seq_dir", type=str, default="results/seq2seq/best")
     p.add_argument("--dataset", type=str, required=True)
     p.add_argument("--split", type=str, default="test")
-    p.add_argument("--out_dir", type=str, default="results/eval")
+    p.add_argument("--out_dir", type=str, default="results/eval_rescore")
     p.add_argument("--max_length", type=int, default=192)
     p.add_argument("--beam_size", type=int, default=4)
     p.add_argument("--lowercase", action="store_true")
     p.add_argument("--max_examples", type=int, default=-1)
-    p.add_argument("--thresholds", type=parse_thresholds,
-                   default=parse_thresholds("0.2,0.3,0.4,0.5"),
-                   help="comma-separated list of detection thresholds")
+    p.add_argument("--threshold", type=float, default=0.3,
+                   help="fixed detector threshold (sweep optimum from sweep_threshold)")
+    p.add_argument("--lambdas", type=parse_lambdas,
+                   default=parse_lambdas("0.1,0.25,0.5,1.0,2.0"),
+                   help="comma-separated list of rescore_lambda values")
+    p.add_argument("--rescore_lm", type=str, required=True,
+                   help="HF causal LM id; required (lambda sweep only makes sense with rescoring)")
+    p.add_argument("--rescore_topk", type=int, default=None)
+    p.add_argument("--diverse_beams", action="store_true",
+                   help="enable diverse beam search in the corrector")
+    p.add_argument("--diversity_penalty", type=float, default=0.5)
     p.add_argument("--errant", action=argparse.BooleanOptionalAction, default=True,
                    help="compute span-based F0.5 using manually-emitted M2 + upstream errant_compare")
     p.add_argument("--errant_bin_dir", type=str, default=None,
                    help="directory containing errant_compare; defaults to PATH lookup")
     p.add_argument("--keep_tmp", action="store_true")
-    p.add_argument("--rescore_lm", type=str, default=None,
-                   help="HF causal LM id; enables top-k beam rescoring (loaded once)")
-    p.add_argument("--rescore_lambda", type=float, default=0.1)
-    p.add_argument("--rescore_topk", type=int, default=None)
-    p.add_argument("--diverse_beams", action="store_true",
-                   help="enable diverse beam search in the corrector")
-    p.add_argument("--diversity_penalty", type=float, default=0.5)
     return p.parse_args()
 
 
@@ -74,32 +76,31 @@ def main():
 
     pairs = make_pairs(data)
     print(f"sentence pairs: {len(pairs)}")
-    print(f"thresholds: {args.thresholds}")
+    print(f"threshold: {args.threshold}")
+    print(f"lambdas: {args.lambdas}")
+    topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
+    print(f"rescoring: {args.rescore_lm} (topk={topk})")
 
-    # self.threshold is unused in the sweep loop; pipeline calls go through
-    # detect_probs + flags_from_probs with explicit thresholds. the lm
-    # (if any) is loaded once here and reused across all sentences/thresholds.
+    # pipeline.rescore_lambda is unused in the sweep loop — pick_best is called
+    # with explicit lambdas. lm + corrector + detector are all loaded once here.
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
-                    args.max_length, args.beam_size, threshold=0.5,
+                    args.max_length, args.beam_size, threshold=args.threshold,
                     lowercase=args.lowercase,
-                    rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
+                    rescore_lm=args.rescore_lm, rescore_lambda=0.0,
                     rescore_topk=args.rescore_topk,
                     diverse_beams=args.diverse_beams, diversity_penalty=args.diversity_penalty)
-    if args.rescore_lm:
-        topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
-        print(f"rescoring: enabled ({args.rescore_lm}, lambda={args.rescore_lambda}, topk={topk})")
     if args.diverse_beams:
         print(f"diverse beams: enabled (penalty={args.diversity_penalty})")
 
     n = len(pairs) if args.max_examples <= 0 else min(len(pairs), args.max_examples)
-    thresholds = args.thresholds
+    lambdas = args.lambdas
 
-    per_thr = {
-        thr: {
+    per_lam = {
+        lam: {
             "correct": 0, "changed": 0, "spurious": 0, "stayed_same": 0, "total": 0,
             "sources": [], "hypotheses": [], "references": [],
         }
-        for thr in thresholds
+        for lam in lambdas
     }
 
     for i in tqdm(range(n)):
@@ -108,25 +109,30 @@ def main():
         sentence = normalize_romanian(inc)
         tokens = word_tokenize(sentence)
 
-        # single detector forward pass shared across all thresholds for this sentence.
-        det_probs, word_ids, type_pred = pipe.detect_probs(tokens)
+        flags, types = pipe.detect(tokens)
 
         truth = normalize_for_match(cor)
         inc_norm = normalize_for_match(inc)
         has_err = inc_norm != truth
 
-        for thr in thresholds:
-            flags, types = pipe.flags_from_probs(det_probs, word_ids, type_pred, thr, len(tokens))
-            if not any(flags):
+        if not any(flags):
+            # no flagged spans → output is the input for every lambda, no lm calls.
+            cands = None
+        else:
+            tagged = pipe.tag(tokens, flags, types)
+            # single corrector generate + K lm forwards + K edit distances per sentence.
+            cands = pipe.score_candidates(tagged, sentence)
+
+        for lam in lambdas:
+            if cands is None:
                 output = sentence
             else:
-                tagged = pipe.tag(tokens, flags, types)
-                output = pipe.correct(tagged, sentence)
+                output = pipe.pick_best(cands, lam)
             pred = normalize_for_match(output)
             is_correct = pred == truth
             was_changed = pred != inc_norm
 
-            s = per_thr[thr]
+            s = per_lam[lam]
             s["total"] += 1
             if is_correct:
                 s["correct"] += 1
@@ -140,18 +146,18 @@ def main():
             s["hypotheses"].append(output)
             s["references"].append(cor)
 
-    threshold_results = []
-    for thr in thresholds:
-        s = per_thr[thr]
+    lambda_results = []
+    for lam in lambdas:
+        s = per_lam[lam]
         result = {
-            "threshold": thr,
+            "lambda": lam,
             "exact_match_acc": s["correct"] / max(s["total"], 1),
             "changed_rate": s["changed"] / max(s["total"], 1),
             "spurious_rate": s["spurious"] / max(s["total"], 1),
             "stayed_same_rate": s["stayed_same"] / max(s["total"], 1),
         }
         if args.errant:
-            errant_dir = out_dir / f"errant_tmp_thr_{thr:.3f}"
+            errant_dir = out_dir / f"errant_tmp_lam_{lam:.3f}"
             er = errant_score(s["sources"], s["hypotheses"], s["references"], errant_dir,
                               keep_tmp=args.keep_tmp, bin_dir=args.errant_bin_dir)
             if er is not None:
@@ -161,36 +167,39 @@ def main():
                 result["errant_n"] = er["n"]
             else:
                 result["errant_status"] = "failed; see stdout for details"
-        threshold_results.append(result)
+        lambda_results.append(result)
 
-    best_by_em = max(threshold_results, key=lambda r: r["exact_match_acc"])["threshold"]
-    ranked_errant = [r for r in threshold_results if "errant_f05" in r]
-    best_by_errant = max(ranked_errant, key=lambda r: r["errant_f05"])["threshold"] if ranked_errant else None
+    best_by_em = max(lambda_results, key=lambda r: r["exact_match_acc"])["lambda"]
+    ranked_errant = [r for r in lambda_results if "errant_f05" in r]
+    best_by_errant = max(ranked_errant, key=lambda r: r["errant_f05"])["lambda"] if ranked_errant else None
 
     summary = {
         "dataset": args.dataset,
         "split": split,
+        "threshold": args.threshold,
+        "rescore_lm": args.rescore_lm,
+        "rescore_topk": topk,
         "n_pairs": n,
-        "thresholds": threshold_results,
+        "lambdas": lambda_results,
         "best_by_errant_f05": best_by_errant,
         "best_by_exact_match": best_by_em,
     }
 
     name = args.dataset.replace("/", "_")
-    out_path = out_dir / f"{name}_sweep.json"
+    out_path = out_dir / f"{name}_lambda_sweep.json"
     with out_path.open("w") as f:
         json.dump(summary, f, indent=2)
 
     # comparison table
     print()
-    print(f"{'threshold':>10} {'em':>7} {'changed':>9} {'spurious':>10} {'stayed_same':>13} {'err_p':>7} {'err_r':>7} {'err_f05':>8}")
-    for r in threshold_results:
-        mark = " *" if r["threshold"] == best_by_errant else ""
+    print(f"{'lambda':>8} {'em':>7} {'changed':>9} {'spurious':>10} {'stayed_same':>13} {'err_p':>7} {'err_r':>7} {'err_f05':>8}")
+    for r in lambda_results:
+        mark = " *" if r["lambda"] == best_by_errant else ""
         ep = r.get("errant_precision", float("nan"))
         er_ = r.get("errant_recall", float("nan"))
         ef = r.get("errant_f05", float("nan"))
         print(
-            f"{r['threshold']:>10.3f} {r['exact_match_acc']:>7.4f} "
+            f"{r['lambda']:>8.3f} {r['exact_match_acc']:>7.4f} "
             f"{r['changed_rate']:>9.4f} {r['spurious_rate']:>10.4f} "
             f"{r['stayed_same_rate']:>13.4f} "
             f"{ep:>7.4f} {er_:>7.4f} {ef:>8.4f}{mark}"

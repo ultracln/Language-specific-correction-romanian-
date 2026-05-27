@@ -35,6 +35,9 @@ def parse_args():
                    help="HF causal LM id; enables top-k beam rescoring")
     p.add_argument("--rescore_lambda", type=float, default=0.1)
     p.add_argument("--rescore_topk", type=int, default=None)
+    p.add_argument("--diverse_beams", action="store_true",
+                   help="enable diverse beam search in the corrector")
+    p.add_argument("--diversity_penalty", type=float, default=0.5)
     return p.parse_args()
 
 
@@ -65,7 +68,8 @@ def main():
     pipe = Pipeline(args.detector_ckpt, args.detector_tokenizer, args.seq2seq_dir,
                     args.max_length, args.beam_size, args.threshold, lowercase=args.lowercase,
                     rescore_lm=args.rescore_lm, rescore_lambda=args.rescore_lambda,
-                    rescore_topk=args.rescore_topk)
+                    rescore_topk=args.rescore_topk,
+                    diverse_beams=args.diverse_beams, diversity_penalty=args.diversity_penalty)
 
     test_rows = load_test(args)
     if args.max_examples > 0:
@@ -123,6 +127,8 @@ def main():
     if args.rescore_lm:
         topk = args.rescore_topk if args.rescore_topk is not None else args.beam_size
         print(f"\nrescoring: enabled ({args.rescore_lm}, lambda={args.rescore_lambda}, topk={topk})")
+    if args.diverse_beams:
+        print(f"diverse beams: enabled (penalty={args.diversity_penalty})")
 
     print("\n=== per error type ===")
     print(f"{'type':<14} {'n':>6} {'acc':>7} {'changed':>9} {'spurious':>10} {'no_change_when_should':>22}")

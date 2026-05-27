@@ -7,7 +7,7 @@ from datasets import load_dataset
 DEFAULT_MODELS = [
     "readerbench/RoBERT-large",
     "google/mt5-small",
-    "readerbench/RoGPT2-base",
+    "readerbench/RoGPT2-medium",
 ]
 
 DEFAULT_DATASETS = [
