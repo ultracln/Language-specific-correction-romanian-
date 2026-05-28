@@ -79,6 +79,9 @@ train-ssl:
 train-detector:
 	sbatch -A $(ACCOUNT) scripts/train_detector.sh
 
+train-detector-ssl:
+	sbatch -A $(ACCOUNT) scripts/train_detector_ssl.sh
+
 train-seq2seq:
 	sbatch -A $(ACCOUNT) scripts/train_seq2seq.sh
 
@@ -90,6 +93,9 @@ eval:
 
 eval-rescore:
 	sbatch -A $(ACCOUNT) scripts/eval_rescore.sh
+
+eval-rescore-ssl:
+	sbatch -A $(ACCOUNT) scripts/eval_rescore_ssl.sh
 
 sweep-threshold:
 	sbatch -A $(ACCOUNT) scripts/sweep_threshold.sh
